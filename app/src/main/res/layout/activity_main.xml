@@ -15,8 +15,6 @@
         app:layout_constraintBottom_toTopOf="@id/barrier"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="119dp"
-        tools:layout_editor_absoluteY="210dp"
         tools:srcCompat="@sample/draw"
         android:contentDescription="@string/avatar" />
 
@@ -58,8 +56,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_baseline_more_vert_24"
-        tools:layout_editor_absoluteX="348dp"
-        tools:layout_editor_absoluteY="8dp"
         android:contentDescription="@string/menu" />
 
     <androidx.constraintlayout.widget.Barrier
@@ -95,7 +91,6 @@
         app:layout_constraintTop_toBottomOf="@id/barrier2"
         android:layout_marginTop="@dimen/margin"
         app:srcCompat="@drawable/ic_baseline_favorite_24"
-        tools:layout_editor_absoluteY="196dp"
         android:contentDescription="@string/likeButton" />
 
     <TextView
