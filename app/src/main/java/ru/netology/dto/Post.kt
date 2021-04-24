@@ -1,11 +1,12 @@
 package ru.netology.dto
 
-class Post(
+data class Post(
     val id: Int,
     val author: String,
     val content: String,
     val published: String,
-    var likes: Int = 0,
-    var likedByMe: Boolean
+    val likes: Int = 0,
+    val shares: Int = 0,
+    val likedByMe: Boolean
     ) {
 }
