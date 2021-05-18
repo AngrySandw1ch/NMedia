@@ -6,5 +6,10 @@
     <string name="likeButton">Like button</string>
     <string name="shareButton">Share button</string>
     <string name="viewsIcon">Views icon</string>
-
+    <string name="menuRemove">Delete</string>
+    <string name="postText">Post Text</string>
+    <string name="descriptionPostLike"> Description Post Like</string>
+    <string name="emptyContent">Empty content</string>
+    <string name="menuEdit">Edit</string>
+    <string name="editMessage">Edit message</string>
 </resources>

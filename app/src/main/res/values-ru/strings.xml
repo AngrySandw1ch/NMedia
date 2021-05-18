@@ -7,4 +7,11 @@
     <string name="likeButton">Кнопка \"нравится\"</string>
     <string name="shareButton">Кнопка \"поделиться\"</string>
     <string name="viewsIcon">Иконка просмотров</string>
+    <string name="menuRemove">Удалить</string>
+    <string name="postText">Текст поста</string>
+    <string name="descriptionPostLike">Описание понравившегося поста</string>
+    <string name="emptyContent">Пустой контент</string>
+    <string name="edit">Изменить</string>
+    <string name="menuEdit">Изменить</string>
+    <string name="editMessage">Изменить сообщение</string>
 </resources>

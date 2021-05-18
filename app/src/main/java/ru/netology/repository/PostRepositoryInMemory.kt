@@ -5,9 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import ru.netology.dto.Post
 
 class PostRepositoryInMemory : PostRepository {
+    private var nextId = 1
     private var posts = listOf(
         Post(
-            id = 1,
+            id = nextId++,
             author = "Нетология. Университет интернет-профессий будущего",
             content = "The Android system implements the principle of least privilege. That is, each app, by default, has access only to the components that it requires to do its work and no more. This creates a very secure environment in which an app cannot access parts of the system for which it is not given permission. However, there are ways for an app to share data with other apps and for an app to access system services:\n" +
                     "\n" +
@@ -17,41 +18,41 @@ class PostRepositoryInMemory : PostRepository {
             likedByMe = false
         ),
         Post(
-            id = 2,
+            id = nextId++,
             author = "Нетология. Университет интернет-профессий будущего",
             content = "An activity is the entry point for interacting with the user. It represents a single screen with a user interface. For example, an email app might have one activity that shows a list of new emails, another activity to compose an email, and another activity for reading emails. Although the activities work together to form a cohesive user experience in the email app, each one is independent of the others. As such, a different app can start any one of these activities if the email app allows it. For example, a camera app can start the activity in the email app that composes new mail to allow the user to share a picture.",
             published = "21 мая в 18:36",
             likedByMe = false
         ),
         Post(
-            id = 3,
+            id = nextId++,
             author = "Нетология. Университет интернет-профессий будущего",
             content = "An activity is the entry point for interacting with the user. It represents a single screen with a user interface. For example, an email app might have one activity that shows a list of new emails, another activity to compose an email, and another activity for reading emails. Although the activities work together to form a cohesive user experience in the email app, each one is independent of the others. As such, a different app can start any one of these activities if the email app allows it. For example, a camera app can start the activity in the email app that composes new mail to allow the user to share a picture.",
             published = "21 мая в 18:36",
             likedByMe = false
         ),
         Post(
-            id = 4,
+            id = nextId++,
             author = "Нетология. Университет интернет-профессий будущего",
             content = "An activity is the entry point for interacting with the user. It represents a single screen with a user interface. For example, an email app might have one activity that shows a list of new emails, another activity to compose an email, and another activity for reading emails. Although the activities work together to form a cohesive user experience in the email app, each one is independent of the others. As such, a different app can start any one of these activities if the email app allows it. For example, a camera app can start the activity in the email app that composes new mail to allow the user to share a picture.",
             published = "21 мая в 18:36",
             likedByMe = false
         ),
         Post(
-            id = 5,
+            id = nextId++,
             author = "Нетология. Университет интернет-профессий будущего",
             content = "An activity is the entry point for interacting with the user. It represents a single screen with a user interface. For example, an email app might have one activity that shows a list of new emails, another activity to compose an email, and another activity for reading emails. Although the activities work together to form a cohesive user experience in the email app, each one is independent of the others. As such, a different app can start any one of these activities if the email app allows it. For example, a camera app can start the activity in the email app that composes new mail to allow the user to share a picture.",
             published = "21 мая в 18:36",
             likedByMe = false
         ),
         Post(
-            id = 6,
+            id = nextId++,
             author = "Нетология. Университет интернет-профессий будущего",
             content = "An activity is the entry point for interacting with the user. It represents a single screen with a user interface. For example, an email app might have one activity that shows a list of new emails, another activity to compose an email, and another activity for reading emails. Although the activities work together to form a cohesive user experience in the email app, each one is independent of the others. As such, a different app can start any one of these activities if the email app allows it. For example, a camera app can start the activity in the email app that composes new mail to allow the user to share a picture.",
             published = "21 мая в 18:36",
             likedByMe = false
         )
-    )
+    ).reversed()
 
     private val data = MutableLiveData(posts)
 
@@ -66,6 +67,29 @@ class PostRepositoryInMemory : PostRepository {
     override fun shareById(id: Int) {
         posts = posts.map {
             if (it.id != id) it else it.copy(shares = it.shares + 1)
+        }
+        data.value = posts
+    }
+
+    override fun removeById(id: Int) {
+        posts = posts.filter {
+            it.id != id
+        }
+        data.value = posts
+    }
+
+    override fun save(post: Post) {
+        if (post.id == 0) {
+            posts = listOf(
+                post.copy(
+                    id = nextId++,
+                    author = "Me",
+                    published = "Now",
+                    likedByMe = false)) + posts
+        } else {
+            posts = posts.map {
+                if(it.id != post.id) it else it.copy(content = post.content)
+            }
         }
         data.value = posts
     }
