@@ -12,4 +12,5 @@
     <string name="emptyContent">Empty content</string>
     <string name="menuEdit">Edit</string>
     <string name="editMessage">Edit message</string>
+    <string name="edit">Editt</string>
 </resources>
