@@ -122,26 +122,24 @@
         app:srcCompat="@drawable/ic_baseline_share_24" />
 
 
-    <ImageView
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/views"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/marginFromButtons"
-        app:layout_constraintBottom_toBottomOf="@+id/viewsCounter"
-        app:layout_constraintEnd_toStartOf="@+id/viewsCounter"
-        app:layout_constraintTop_toTopOf="@+id/viewsCounter"
-        app:srcCompat="@drawable/ic_baseline_visibility_24"
-        android:contentDescription="@string/viewsIcon" />
-
-    <TextView
-        android:id="@+id/viewsCounter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin"
+        style="@style/AppCheckBox"
+        android:clickable="false"
+        app:icon="@drawable/ic_baseline_visibility_24"
+        app:iconGravity="start"
+        app:iconPadding="@dimen/standardMargin"
+        tools:text="@sample/posts.json/data/view"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/barrier2"
-        tools:text="@sample/posts.json/data/view" />
+        app:srcCompat="@drawable/ic_baseline_visibility_24"
+        android:contentDescription="@string/viewsIcon" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
