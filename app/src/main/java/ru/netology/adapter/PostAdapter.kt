@@ -44,11 +44,9 @@ class PostViewHolder(
             author.text = post.author
             published.text = post.published
             content.text = post.content
-            like.setImageResource(
-                if (post.likedByMe) R.drawable.ic_baseline_favorite_red_24 else R.drawable.ic_baseline_favorite_24
-            )
-            likesCounter.text = if (post.likes == 0) "" else PostManager.formatNum(post.likes)
-            sharesCounter.text = if (post.shares == 0) "" else PostManager.formatNum(post.shares)
+            like.isChecked = post.likedByMe
+            share.text = if (post.shares == 0) "" else PostManager.formatNum(post.shares)
+            like.text = if (post.likes == 0) "" else PostManager.formatNum(post.likes)
             like.setOnClickListener {
                 onInteractionListener.like(post)
             }
