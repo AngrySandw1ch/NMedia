@@ -14,4 +14,9 @@
     <string name="edit">Изменить</string>
     <string name="menuEdit">Изменить</string>
     <string name="editMessage">Изменить сообщение</string>
+    <string name="chooserSharePost">Поделиться постом</string>
+    <string name="errorEmptyContent">Пустой контент</string>
+    <string name="addPost">Добавить пост</string>
+    <string name="descriptionPostSave">Сохранить пост</string>
+    <string name="descriptionCancelPostSaves">Отменить</string>
 </resources>

@@ -13,4 +13,9 @@
     <string name="menuEdit">Edit</string>
     <string name="editMessage">Edit message</string>
     <string name="edit">Editt</string>
+    <string name="chooserSharePost">Share post</string>
+    <string name="errorEmptyContent">Empty content</string>
+    <string name="addPost">Add post</string>
+    <string name="descriptionPostSave">Post save</string>
+    <string name="descriptionCancelPostSaves">Cancel</string>
 </resources>

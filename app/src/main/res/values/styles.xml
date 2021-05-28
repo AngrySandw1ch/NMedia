@@ -11,4 +11,8 @@
         <item name="android:checkable">true</item>
     </style>
 
+    <style name="MyStyle" parent="Widget.MaterialComponents.Button">
+        <item name="android:checkable">true</item>
+    </style>
+
 </resources>
