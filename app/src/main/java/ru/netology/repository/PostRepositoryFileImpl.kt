@@ -18,9 +18,12 @@ class PostRepositoryFileImpl(private val context: Context): PostRepository {
     init {
         val file = context.filesDir.resolve(filename)
         if (file.exists()) {
-            context.openFileInput(filename).bufferedReader().use {
+            context.openFileInput(filename).bufferedReader().use { it ->
                 posts = gson.fromJson(it, type)
                 data.value = posts
+                if (posts.isNotEmpty()) {
+                    nextId = posts.maxBy {it.id}!!.id + 1
+                }
             }
         } else {
             sync()
@@ -77,6 +80,5 @@ class PostRepositoryFileImpl(private val context: Context): PostRepository {
         context.openFileOutput(filename, Context.MODE_PRIVATE).bufferedWriter().use {
             it.write(gson.toJson(posts))
         }
-        nextId = posts.last().id + 1
     }
 }
