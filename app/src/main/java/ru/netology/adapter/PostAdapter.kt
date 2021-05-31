@@ -7,7 +7,7 @@ import android.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import ru.netology.PostManager
+import ru.netology.util.PostUtils
 import ru.netology.R
 import ru.netology.databinding.CardPostBinding
 import ru.netology.dto.Post
@@ -47,8 +47,8 @@ class PostViewHolder(
             published.text = post.published
             content.text = post.content
             like.isChecked = post.likedByMe
-            share.text = if (post.shares == 0) "" else PostManager.formatNum(post.shares)
-            like.text = if (post.likes == 0) "" else PostManager.formatNum(post.likes)
+            share.text = if (post.shares == 0) "" else PostUtils.formatNum(post.shares)
+            like.text = if (post.likes == 0) "" else PostUtils.formatNum(post.likes)
             mediaLayout.visibility = if (post.media.isNullOrBlank()) View.GONE else View.VISIBLE
 
             playVideoButton.setOnClickListener {

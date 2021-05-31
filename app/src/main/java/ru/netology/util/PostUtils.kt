@@ -1,6 +1,6 @@
-package ru.netology
+package ru.netology.util
 
-object PostManager {
+object PostUtils {
     private const val THOU = 1000;
     private const val MILL = 1000000;
 
