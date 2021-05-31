@@ -57,11 +57,12 @@ class PostRepositoryFileImpl(private val context: Context): PostRepository {
     override fun save(post: Post) {
         if (post.id == 0) {
             posts = listOf(post.copy(
-                id = nextId,
+                id = nextId++,
                 author = "Me",
                 published = "Now",
                 likedByMe = false
             )) + posts
+            sync()
         } else {
             posts = posts.map {
                 if (it.id != post.id) it else it.copy(content = post.content)
@@ -72,8 +73,10 @@ class PostRepositoryFileImpl(private val context: Context): PostRepository {
     }
 
     private fun sync() {
+        data.value = posts
         context.openFileOutput(filename, Context.MODE_PRIVATE).bufferedWriter().use {
             it.write(gson.toJson(posts))
         }
+        nextId = posts.last().id + 1
     }
 }

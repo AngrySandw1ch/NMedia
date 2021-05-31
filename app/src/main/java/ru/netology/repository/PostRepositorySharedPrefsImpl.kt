@@ -15,11 +15,13 @@ class PostRepositorySharedPrefsImpl(context: Context): PostRepository {
     private val data = MutableLiveData(posts)
     private val key = "posts"
     private var nextId = 1
+    private val lastIdKey = "last index"
 
     init {
         prefs.getString(key, null)?.let {
             posts = gson.fromJson(it, type)
             data.value = posts
+            sync()
         }
     }
 
@@ -52,7 +54,7 @@ class PostRepositorySharedPrefsImpl(context: Context): PostRepository {
     override fun save(post: Post) {
         if (post.id == 0) {
             posts = listOf(post.copy(
-                id = nextId,
+                id = nextId++,
                 author = "Me",
                 published = "Now",
                 likedByMe = false
@@ -67,9 +69,11 @@ class PostRepositorySharedPrefsImpl(context: Context): PostRepository {
     }
 
     private fun sync() {
+        data.value = posts
         with(prefs.edit()) {
             putString(key, gson.toJson(posts))
             apply()
         }
+        prefs.edit().putInt(lastIdKey, nextId).apply()
     }
 }
