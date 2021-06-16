@@ -9,9 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".EditedPostActivity"></activity>
-        <activity android:name=".NewPostActivity"></activity>
-        <activity android:name=".IntentHandlerActivity">
+        <activity android:name=".EditedPostFragment"></activity>
+        <activity android:name=".AppActivity">
+            <nav-graph android:value="@navigation/nav_main" />
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
 
@@ -19,8 +19,6 @@
 
                 <data android:mimeType="text/plain" />
             </intent-filter>
-        </activity>
-        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

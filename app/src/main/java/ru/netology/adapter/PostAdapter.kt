@@ -18,6 +18,7 @@ interface OnInteractionListener {
     fun remove(post: Post) {}
     fun share(post: Post) {}
     fun playVideo(post: Post){}
+    fun postClicked(post: Post){}
 }
 
 class PostAdapter(
@@ -61,6 +62,11 @@ class PostViewHolder(
             share.setOnClickListener {
                 onInteractionListener.share(post)
             }
+            content.setOnClickListener {
+                onInteractionListener.postClicked(post)
+            }
+
+
             menu.setOnClickListener { it ->
                 PopupMenu(it.context, it).apply {
                     inflate(R.menu.options_post)
