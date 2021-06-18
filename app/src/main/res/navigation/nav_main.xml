@@ -48,6 +48,20 @@
         android:name="ru.netology.PostFragment"
         android:label="fragment_post"
         tools:layout="@layout/fragment_post">
+        <action
+            android:id="@+id/action_focusedPost_to_editPostFragment"
+            app:destination="@id/editPostFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_focusedPost_to_feedFragment"
+            app:destination="@id/feedFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
 
 </navigation>

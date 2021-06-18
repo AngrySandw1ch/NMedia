@@ -75,13 +75,6 @@ class FeedFragment : Fragment() {
 
             override fun postClicked(post: Post) {
                 val bundle = Bundle().apply {
-                    putString("content", post.content)
-                    putString("author", post.author)
-                    putString("published", post.published)
-                    putString("media", post.media)
-                    putBoolean("liked by me", post.likedByMe)
-                    putInt("likes", post.likes)
-                    putInt("shares", post.shares)
                     putInt("id", post.id)
                 }
                 findNavController().navigate(R.id.action_feedFragment_to_postFragment, bundle)
