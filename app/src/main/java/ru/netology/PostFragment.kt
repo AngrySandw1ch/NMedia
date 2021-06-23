@@ -14,10 +14,11 @@ import androidx.navigation.fragment.findNavController
 import ru.netology.databinding.FragmentPostBinding
 import ru.netology.viewmodel.PostViewModel
 
-class PostFragment: Fragment() {
+class PostFragment : Fragment() {
     val viewModel: PostViewModel by viewModels(
         ownerProducer = ::requireParentFragment
     )
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -30,57 +31,59 @@ class PostFragment: Fragment() {
         )
         val postId = arguments?.getInt("id")
         viewModel.data.observe(viewLifecycleOwner) {
-            val post = it.filter { it.id == postId }.first()
-
-            post.apply {
+            it.firstOrNull { post -> post.id == postId }?.apply {
                 binding.post.content.text = "$content"
                 binding.post.published.text = "$published"
                 binding.post.author.text = "$author"
                 binding.post.like.text = if (likes > 0) "$likes" else ""
-                binding.post.share.text = "$shares"
+                binding.post.share.text = if(shares > 0) "$shares" else ""
                 binding.post.like.isChecked = likedByMe
-            }
-            binding.post.like.setOnClickListener {
-                    viewModel.likeById(post.id)
-            }
-            binding.post.share.setOnClickListener {
-                    viewModel.shareById(post.id)
+                binding.post.like.setOnClickListener {
+                    viewModel.likeById(id)
+                }
+                binding.post.share.setOnClickListener {
+                    viewModel.shareById(id)
                     val intent = Intent().apply {
                         action = Intent.ACTION_SEND
                         type = "text/plain"
-                        putExtra(Intent.EXTRA_TEXT, binding.post.content.text)
+                        putExtra(Intent.EXTRA_TEXT, binding.post.content.text.toString())
                     }
-                    val shareIntent = Intent.createChooser(intent, getString(R.string.chooserSharePost))
+                    val shareIntent =
+                        Intent.createChooser(intent, getString(R.string.chooserSharePost))
                     startActivity(shareIntent)
-            }
-            binding.post.videoPlayer.setOnClickListener {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(post.media))
+                }
+                binding.post.videoPlayer.setOnClickListener {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(media))
                     startActivity(intent)
-            }
-            binding.post.menu.setOnClickListener { menu ->
-                PopupMenu(menu.context, menu).apply {
-                    inflate(R.menu.options_post)
-                    setOnMenuItemClickListener { menuItem ->
-                        when (menuItem.itemId) {
-                            R.id.menu_remove -> {
-                                viewModel.removeById(post.id)
-                                findNavController().navigate(R.id.action_focusedPost_to_feedFragment)
-                                true
+                }
+                val post = this
+                binding.post.menu.setOnClickListener { menu ->
+                    PopupMenu(menu.context, menu).apply {
+                        inflate(R.menu.options_post)
+                        setOnMenuItemClickListener { menuItem ->
+                            when (menuItem.itemId) {
+                                R.id.menu_remove -> {
+                                    viewModel.removeById(id)
+                                    findNavController().navigate(R.id.action_focusedPost_to_feedFragment)
+                                    true
+                                }
+                                R.id.menu_edit -> {
+                                    viewModel.edit(post)
+                                    val bundle = Bundle()
+                                    bundle.putString("edit text", content)
+                                    findNavController().navigate(
+                                        R.id.action_focusedPost_to_editPostFragment,
+                                        bundle
+                                    )
+                                    true
+                                }
+                                else -> false
                             }
-                            R.id.menu_edit -> {
-                                viewModel.edit(post)
-                                val bundle = Bundle()
-                                bundle.putString("edit text", post.content)
-                                findNavController().navigate(R.id.action_focusedPost_to_editPostFragment, bundle)
-                                true
-                            }
-                            else -> false
                         }
-                    }
-                }.show()
+                    }.show()
+                }
             }
         }
-
 
         viewModel.edited.observe(viewLifecycleOwner) {
             if (it.id == 0) {
