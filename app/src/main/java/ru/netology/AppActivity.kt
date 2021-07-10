@@ -3,14 +3,18 @@ package ru.netology
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.navigation.findNavController
+import com.google.firebase.messaging.FirebaseMessaging
 import ru.netology.NewPostFragment.Companion.textArg
 
 
 class AppActivity : AppCompatActivity(R.layout.activity_app) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        FirebaseMessaging.getInstance().token.addOnSuccessListener {
+            println(it)
+        }
         intent?.let {
             if (it.action != Intent.ACTION_SEND) {
                 return@let

@@ -19,4 +19,8 @@
     <string name="addPost">Добавить пост</string>
     <string name="descriptionPostSave">Сохранить пост</string>
     <string name="descriptionCancelPostSaves">Отменить</string>
+    <string name="channel_remote_name">Удаленное имя канала</string>
+    <string name="channel_remote_description">Описание удаленного канала</string>
+    <string name="notification_user_liked">%1$s поставил лайк посту %2$s</string>
+    <string name="notification_new_post">%1$s опубликовал новый пост:</string>
 </resources>
