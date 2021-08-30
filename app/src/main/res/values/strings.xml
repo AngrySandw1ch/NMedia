@@ -18,4 +18,8 @@
     <string name="addPost">Add post</string>
     <string name="descriptionPostSave">Post save</string>
     <string name="descriptionCancelPostSaves">Cancel</string>
+    <string name="channel_remote_name">Channel remote name</string>
+    <string name="channel_remote_description">Channel remote description</string>
+    <string name="notification_user_liked">%1$s liked post %2$s</string>
+    <string name="notification_new_post">%1$s published a new post:</string>
 </resources>
