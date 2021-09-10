@@ -102,7 +102,7 @@ data class Like(
 )
 
 data class NewPost(
-    val postId: Int,
+    val postId: Long,
     val postAuthor: String,
     val postContent: String
 )

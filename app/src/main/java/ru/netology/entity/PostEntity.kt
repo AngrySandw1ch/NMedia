@@ -7,7 +7,7 @@ import ru.netology.dto.Post
 @Entity
 data class PostEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    val id: Long,
     val author: String,
     val content: String,
     val published: String,

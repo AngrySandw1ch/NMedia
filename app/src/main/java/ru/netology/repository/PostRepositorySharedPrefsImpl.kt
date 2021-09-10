@@ -1,4 +1,4 @@
-package ru.netology.repository
+/*package ru.netology.repository
 
 import android.content.Context
 import androidx.lifecycle.LiveData
@@ -14,7 +14,7 @@ class PostRepositorySharedPrefsImpl(context: Context): PostRepository {
     private val type = TypeToken.getParameterized(List::class.java, Post::class.java).type
     private val data = MutableLiveData(posts)
     private val key = "posts"
-    private var nextId = 1
+    private var nextId = 1L
     private val lastIdKey = "last index"
 
     init {
@@ -27,7 +27,7 @@ class PostRepositorySharedPrefsImpl(context: Context): PostRepository {
 
     override fun getAll(): LiveData<List<Post>> = data
 
-    override fun likeById(id: Int) {
+    override fun likeById(id: Long) {
         posts = posts.map {
             if (it.id != id) it else it.copy(likedByMe = !it.likedByMe, likes = if (it.likedByMe) it.likes - 1 else it.likes + 1)
         }
@@ -35,7 +35,7 @@ class PostRepositorySharedPrefsImpl(context: Context): PostRepository {
         sync()
     }
 
-    override fun shareById(id: Int) {
+    override fun shareById(id: Long) {
         posts = posts.map {
             if (it.id != id) it else it.copy(shares = it.shares + 1)
         }
@@ -43,7 +43,7 @@ class PostRepositorySharedPrefsImpl(context: Context): PostRepository {
         sync()
     }
 
-    override fun removeById(id: Int) {
+    override fun removeById(id: Long) {
         posts = posts.filter {
             it.id != id
         }
@@ -52,7 +52,7 @@ class PostRepositorySharedPrefsImpl(context: Context): PostRepository {
     }
 
     override fun save(post: Post) {
-        if (post.id == 0) {
+        if (post.id == 0L) {
             posts = listOf(post.copy(
                 id = nextId++,
                 author = "Me",
@@ -74,6 +74,6 @@ class PostRepositorySharedPrefsImpl(context: Context): PostRepository {
             putString(key, gson.toJson(posts))
             apply()
         }
-        prefs.edit().putInt(lastIdKey, nextId).apply()
+        prefs.edit().putLong(lastIdKey, nextId).apply()
     }
-}
+}*/

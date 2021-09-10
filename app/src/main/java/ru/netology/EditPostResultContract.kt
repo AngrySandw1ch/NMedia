@@ -1,4 +1,4 @@
-package ru.netology
+/*package ru.netology
 
 import android.app.Activity
 import android.content.Context
@@ -19,4 +19,4 @@ class EditPostResultContract: ActivityResultContract<String, String?>(){
             return null
         }
     }
-}
+}*/

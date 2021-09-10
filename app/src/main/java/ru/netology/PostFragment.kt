@@ -29,9 +29,9 @@ class PostFragment : Fragment() {
             container,
             false
         )
-        val postId = arguments?.getInt("id")
+        val postId = arguments?.getLong("id")
         viewModel.data.observe(viewLifecycleOwner) {
-            it.firstOrNull { post -> post.id == postId }?.apply {
+            it.posts.firstOrNull { post -> post.id == postId }?.apply {
                 binding.post.content.text = "$content"
                 binding.post.published.text = "$published"
                 binding.post.author.text = "$author"
@@ -86,7 +86,7 @@ class PostFragment : Fragment() {
         }
 
         viewModel.edited.observe(viewLifecycleOwner) {
-            if (it.id == 0) {
+            if (it.id == 0L) {
                 return@observe
             }
         }
