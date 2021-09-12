@@ -26,5 +26,5 @@
     <string name="google_play_unavailable">Гугл плей недоступен</string>
     <string name="error_loading">Ошибка загрузки</string>
     <string name="retry_loading">Повторить загрузку</string>
-    <string name="empty_posts">Пустые сообщения</string>
+    <string name="empty_posts">Посты отсутсвуют</string>
 </resources>
