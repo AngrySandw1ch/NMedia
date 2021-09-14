@@ -11,6 +11,7 @@ import ru.netology.model.FeedModel
 import ru.netology.repository.*
 import ru.netology.util.SingleLiveEvent
 import java.io.IOException
+import java.lang.RuntimeException
 import kotlin.concurrent.thread
 
 private val empty = Post(
@@ -76,23 +77,31 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
     fun likeById(id: Long) {
         thread {
-            var post = repository.getAll().firstOrNull {
+            var post = repository.getAll().first {
                 it.id == id
             }
 
-            if (post?.likedByMe == true) {
-                post.id.let {repository.unLikeById(it)}
+            if (post.likedByMe) {
+                repository.unLikeById(post.id)
             } else {
-                post?.id.let { repository.likeById(it!!)}
+                repository.likeById(post.id)
             }
 
-            post = post?.copy(likes = if (post.likedByMe) post.likes - 1 else post.likes + 1, likedByMe = !post.likedByMe)
+            post = post.copy(
+                likes = if (post.likedByMe) post.likes - 1 else post.likes + 1,
+                likedByMe = !post.likedByMe
+            )
 
-            _data.postValue(_data.value?.copy(posts = _data.value.let { feedModel ->
-                feedModel?.posts!!.map {
-                if (it.id != post?.id) it else post
+            _data.postValue(_data.value?.let { feedModel ->
+                feedModel.posts.let { posts ->
+                    posts.map {
+                        if(it.id != id) it else post
+                    }
                 }
-            }))
+            }?.let {
+                _data.value?.copy(posts = it)
+            })
+
         }
     }
 
@@ -106,7 +115,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             val old = _data.value?.posts.orEmpty()
             _data.postValue(
                 _data.value?.copy(posts = _data.value?.posts.orEmpty()
-                    .filter { it.id != id}
+                    .filter { it.id != id }
                 )
             )
             try {
