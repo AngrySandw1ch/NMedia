@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name" translatable="false">nmedia</string>
+    <string name="app_name">nmedia</string>
     <string name="Hello">Nmedia!</string>
-    <string name="avatar" translatable="false">Yor avatar</string>
+    <string name="avatar">Yor avatar</string>
     <string name="menu">Menu</string>
     <string name="likeButton">Like button</string>
     <string name="shareButton">Share button</string>
@@ -22,4 +22,8 @@
     <string name="channel_remote_description">Channel remote description</string>
     <string name="notification_user_liked">%1$s liked post %2$s</string>
     <string name="notification_new_post">%1$s published a new post:</string>
+    <string name="google_play_unavailable">Google play unavailable</string>
+    <string name="error_loading">Error loading</string>
+    <string name="retry_loading">Retry loading</string>
+    <string name="empty_posts">Empty posts</string>
 </resources>

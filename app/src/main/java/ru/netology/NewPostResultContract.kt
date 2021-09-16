@@ -1,4 +1,4 @@
-package ru.netology
+/*package ru.netology
 
 import android.app.Activity
 import android.content.Context
@@ -17,4 +17,4 @@ class NewPostResultContract: ActivityResultContract<Unit, String?>() {
             return null
         }
     }
-}
+}*/

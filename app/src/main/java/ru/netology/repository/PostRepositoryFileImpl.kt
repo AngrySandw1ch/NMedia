@@ -1,4 +1,4 @@
-package ru.netology.repository
+/*package ru.netology.repository
 
 import android.content.Context
 import androidx.lifecycle.LiveData
@@ -12,7 +12,7 @@ class PostRepositoryFileImpl(private val context: Context): PostRepository {
     private var posts = emptyList<Post>()
     private val type = TypeToken.getParameterized(List::class.java, Post::class.java).type
     private val data = MutableLiveData(posts)
-    private var nextId = 1
+    private var nextId = 1L
     private val filename = "posts.json"
 
     init {
@@ -33,7 +33,7 @@ class PostRepositoryFileImpl(private val context: Context): PostRepository {
 
     override fun getAll(): LiveData<List<Post>> = data
 
-    override fun likeById(id: Int) {
+    override fun likeById(id: Long) {
         posts = posts.map {
             if (it.id != id) it else it.copy(likedByMe = !it.likedByMe, likes = if (it.likedByMe) it.likes - 1 else it.likes + 1)
         }
@@ -41,7 +41,7 @@ class PostRepositoryFileImpl(private val context: Context): PostRepository {
         sync()
     }
 
-    override fun shareById(id: Int) {
+    override fun shareById(id: Long) {
         posts = posts.map {
             if (it.id != id) it else it.copy(shares = it.shares + 1)
         }
@@ -49,7 +49,7 @@ class PostRepositoryFileImpl(private val context: Context): PostRepository {
         sync()
     }
 
-    override fun removeById(id: Int) {
+    override fun removeById(id: Long) {
         posts = posts.filter {
             it.id != id
         }
@@ -58,7 +58,7 @@ class PostRepositoryFileImpl(private val context: Context): PostRepository {
     }
 
     override fun save(post: Post) {
-        if (post.id == 0) {
+        if (post.id == 0L) {
             posts = listOf(post.copy(
                 id = nextId++,
                 author = "Me",
@@ -81,4 +81,4 @@ class PostRepositoryFileImpl(private val context: Context): PostRepository {
             it.write(gson.toJson(posts))
         }
     }
-}
+}*/
