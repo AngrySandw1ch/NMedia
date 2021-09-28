@@ -28,7 +28,7 @@ class EditedPostFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val binding: FragmentEditedPostBinding = FragmentEditedPostBinding.inflate(
             inflater,
             container,
@@ -40,6 +40,7 @@ class EditedPostFragment : Fragment() {
         binding.ok.setOnClickListener {
             viewModel.changeContent(binding.edit.text.toString())
             viewModel.save()
+            viewModel.loadPosts()
             AndroidUtils.hideKeyboard(requireView())
             findNavController().navigateUp()
         }

@@ -19,6 +19,7 @@ private val empty = Post(
     author = "",
     content = "",
     published = "",
+    authorAvatar = "",
     likedByMe = false
 )
 
@@ -58,8 +59,8 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
            // }
             repository.saveAsync(it, object : PostRepository.SaveCallback {
                 override fun onSuccess(post: Post) {
-                   // val posts1 = _data.value?.posts ?: throw Exception("Empty data value")
-                   // _data.postValue(FeedModel(posts = posts1.plus(post), empty = posts1.isEmpty()))
+                   val posts1 = _data.value?.posts ?: throw Exception("Empty data value")
+                   _data.postValue(FeedModel(posts = posts1.plus(post), empty = posts1.isEmpty()))
                     _postCreated.postValue(Unit)
                 }
 
