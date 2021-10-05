@@ -1,12 +1,17 @@
 package ru.netology.adapter
 
+import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import androidx.core.graphics.drawable.RoundedBitmapDrawable
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.BitmapImageViewTarget
 import ru.netology.util.PostUtils
 import ru.netology.R
 import ru.netology.databinding.CardPostBinding
@@ -52,6 +57,16 @@ class PostViewHolder(
             share.text = if (post.shares == 0) "" else PostUtils.formatNum(post.shares)
             like.text = if (post.likes == 0) "" else PostUtils.formatNum(post.likes)
             mediaLayout.visibility = if (post.media.isNullOrBlank()) View.GONE else View.VISIBLE
+
+            val url = "http://10.0.2.2:9999/avatars/${post.authorAvatar}"
+
+            Glide.with(avatar)
+                .load(url)
+                .circleCrop()
+                .placeholder(R.drawable.ic_round_cloud_download_24)
+                .error(R.drawable.ic_baseline_error_24)
+                .into(avatar)
+
 
             playVideoButton.setOnClickListener {
                 onInteractionListener.playVideo(post)
