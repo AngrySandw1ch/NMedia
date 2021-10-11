@@ -62,9 +62,10 @@ class PostViewHolder(
 
             Glide.with(avatar)
                 .load(url)
-                .circleCrop()
                 .placeholder(R.drawable.ic_round_cloud_download_24)
                 .error(R.drawable.ic_baseline_error_24)
+                .circleCrop()
+                .timeout(30_000)
                 .into(avatar)
 
 

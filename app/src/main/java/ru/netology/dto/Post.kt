@@ -1,5 +1,6 @@
 package ru.netology.dto
 
+
 data class Post(
     val id: Long,
     val author: String,
@@ -9,6 +10,5 @@ data class Post(
     val likes: Int = 0,
     val shares: Int = 0,
     val likedByMe: Boolean,
-    val media: String? = null
-    ) {
-}
+    val media: String? = null,
+    )
