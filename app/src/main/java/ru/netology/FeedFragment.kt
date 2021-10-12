@@ -22,6 +22,7 @@ import ru.netology.util.AndroidUtils
 import ru.netology.viewmodel.PostViewModel
 import androidx.fragment.app.viewModels;
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.card_post.view.*
 import ru.netology.databinding.FragmentFeedBinding
 
@@ -35,7 +36,7 @@ class FeedFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val binding: FragmentFeedBinding = FragmentFeedBinding.inflate(
             inflater,
             container,
@@ -89,9 +90,9 @@ class FeedFragment : Fragment() {
         binding.container.adapter = adapter
         viewModel.data.observe(viewLifecycleOwner) { state ->
             adapter.submitList(state.posts)
-            binding.progress?.isVisible = state.loading
-            binding.errorGroup?.isVisible = state.error
-            binding.emptyText?.isVisible = state.empty
+            binding.progress.isVisible = state.loading
+            binding.errorGroup.isVisible = state.error
+            binding.emptyText.isVisible = state.empty
 
         }
         viewModel.edited.observe(viewLifecycleOwner) {
@@ -100,7 +101,7 @@ class FeedFragment : Fragment() {
             }
         }
 
-        binding.retryButton?.setOnClickListener {
+        binding.retryButton.setOnClickListener {
             viewModel.loadPosts()
         }
 
