@@ -93,6 +93,11 @@ class FeedFragment : Fragment() {
             binding.progress.isVisible = state.loading
             binding.errorGroup.isVisible = state.error
             binding.emptyText.isVisible = state.empty
+            if (state.responseCode != 200 && state.responseCode != 0) {
+                binding.serverErrorGroup?.isVisible = true
+                binding.serverErrorText?.text = getString(R.string.server_error, state.responseCode.toString())
+            }
+            binding.serverErrorGroup?.isVisible = !(state.responseCode == 200 || state.responseCode == 0)
 
         }
         viewModel.edited.observe(viewLifecycleOwner) {

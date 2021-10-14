@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="standardMargin">4dp</dimen>
-    <dimen name="margin">16dp</dimen>
+    <dimen name="ordinaryMargin">16dp</dimen>
     <dimen name="marginFromButtons">8dp</dimen>
     <dimen name="avatarSize">48dp</dimen>
     <dimen name="menuButtonSize">40dp</dimen>
+    <dimen name="imageSize">80dp</dimen>
 </resources>
