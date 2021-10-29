@@ -27,4 +27,5 @@
     <string name="error_loading">Ошибка загрузки</string>
     <string name="retry_loading">Повторить загрузку</string>
     <string name="empty_posts">Посты отсутсвуют</string>
+    <string name="server_error">Ошибка сервера %1$s</string>
 </resources>

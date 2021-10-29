@@ -4,41 +4,16 @@ import androidx.lifecycle.LiveData
 import ru.netology.dto.Post
 
 interface PostRepository {
-    /*fun getAll(): List<Post>
-    fun likeById(id: Long)
-    fun unLikeById(id: Long)
-    fun shareById(id: Long)
-    fun removeById(id: Long)
-    fun save(post: Post)*/
 
-    fun getAllAsync(callback: GetAllCallback)
-    fun likeByIdAsync(id: Long, callback: LikeByIdCallback)
-    fun unLikeByIdAsync(id: Long, callback: UnLikeByIdCallback)
-    fun removeByIdAsync(id: Long, callback: RemoveByIdCallback)
-    fun saveAsync(post: Post, callback: SaveCallback)
+    fun getAllAsync(callback: Callback<List<Post>>)
+    fun save(post: Post, callback: Callback<Post>)
+    fun removeById(id: Long, callback: Callback<Unit>)
+    fun likeById(id: Long, callback: Callback<Post>)
+    fun dislikeById(id: Long, callback: Callback<Post>)
+    fun getResponseCode() : Int
 
-    interface GetAllCallback {
-        fun onSuccess(posts: List<Post>) {}
-        fun onError(e: Exception) {}
-    }
-
-    interface LikeByIdCallback {
-        fun onSuccess(post: Post) {}
-        fun onError(e: Exception) {}
-    }
-
-    interface UnLikeByIdCallback {
-        fun onSuccess(post: Post) {}
-        fun onError(e: Exception) {}
-    }
-
-   interface RemoveByIdCallback {
-       fun onSuccess() {}
-       fun onError(e: Exception) {}
-   }
-
-    interface SaveCallback {
-        fun onSuccess(post: Post) {}
+    interface Callback<T> {
+        fun onSuccess(posts: T) {}
         fun onError(e: Exception) {}
     }
 }
