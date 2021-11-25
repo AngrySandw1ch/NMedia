@@ -1,10 +1,6 @@
-package ru.netology
+package ru.netology.activity
 
-import android.app.Activity
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +9,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import ru.netology.databinding.FragmentNewPostBinding
-import ru.netology.dto.Post
 import ru.netology.util.AndroidUtils
 import ru.netology.util.StringArg
 import ru.netology.viewmodel.PostViewModel

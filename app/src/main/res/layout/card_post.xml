@@ -1,5 +1,4 @@
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardPost"
@@ -12,11 +11,11 @@
         android:layout_width="@dimen/avatarSize"
         android:layout_height="@dimen/avatarSize"
         android:layout_marginBottom="@dimen/ordinaryMargin"
+        android:contentDescription="@string/avatar"
         app:layout_constraintBottom_toTopOf="@id/barrier"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@sample/draw"
-        android:contentDescription="@string/avatar" />
+        tools:srcCompat="@sample/draw" />
 
 
     <TextView
@@ -54,12 +53,12 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/ordinaryMargin"
         android:background="@android:color/transparent"
+        android:contentDescription="@string/menu"
         app:icon="@drawable/ic_baseline_more_vert_24"
         app:iconGravity="end"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_baseline_more_vert_24"
-        android:contentDescription="@string/menu" />
+        app:srcCompat="@drawable/ic_baseline_more_vert_24" />
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrier"
@@ -74,10 +73,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/ordinaryMargin"
         android:layout_marginBottom="@dimen/ordinaryMargin"
-        app:layout_constraintTop_toBottomOf="@id/barrier"
         app:layout_constraintBottom_toTopOf="@id/mediaLayout"
-        tools:text="@sample/posts.json/data/content">
-    </TextView>
+        app:layout_constraintTop_toBottomOf="@id/barrier"
+        tools:text="@sample/posts.json/data/content"/>
 
     <FrameLayout
         android:id="@+id/mediaLayout"
@@ -85,25 +83,23 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/content"
         app:layout_constraintBottom_toTopOf="@id/barrier2"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/content">
 
         <VideoView
             android:id="@+id/videoPlayer"
             android:layout_width="wrap_content"
             android:layout_height="250dp"
-            android:background="@android:color/transparent">
-        </VideoView>
+            android:background="@android:color/transparent"/>
 
         <ImageButton
             android:id="@+id/playVideoButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            app:srcCompat="@drawable/ic_play_24">
-        </ImageButton>
+            app:srcCompat="@drawable/ic_play_24"/>
 
     </FrameLayout>
 
@@ -116,60 +112,58 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/like"
-        tools:checked="true"
-        tools:text="23"
         style="@style/AppCheckBox"
-        app:iconPadding="@dimen/standardMargin"
-        app:icon="@drawable/ic_favorite_selector"
-        app:iconTint="@color/color_like"
-        android:background="@android:color/transparent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/ordinaryMargin"
+        android:background="@android:color/transparent"
         android:contentDescription="@string/likeButton"
+        app:icon="@drawable/ic_favorite_selector"
+        app:iconPadding="@dimen/standardMargin"
+        app:iconTint="@color/color_like"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/barrier2" />
+        app:layout_constraintTop_toBottomOf="@id/barrier2"
+        tools:checked="true"
+        tools:text="23" />
 
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/share"
+        style="@style/AppCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/AppCheckBox"
-        tools:text="1234"
-        app:icon="@drawable/ic_baseline_share_24"
-        app:iconTint="@color/simpleGrey"
-        app:iconPadding="@dimen/standardMargin"
         android:layout_marginStart="@dimen/standardMargin"
         android:layout_marginTop="@dimen/ordinaryMargin"
         android:background="@android:color/transparent"
         android:contentDescription="@string/shareButton"
+        app:icon="@drawable/ic_baseline_share_24"
+        app:iconPadding="@dimen/standardMargin"
+        app:iconTint="@color/simpleGrey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/like"
         app:layout_constraintTop_toBottomOf="@id/barrier2"
-        app:srcCompat="@drawable/ic_baseline_share_24" />
+        app:srcCompat="@drawable/ic_baseline_share_24"
+        tools:text="1234" />
 
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/views"
+        style="@style/AppCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/marginFromButtons"
         android:layout_marginTop="@dimen/ordinaryMargin"
-        style="@style/AppCheckBox"
+        android:layout_marginEnd="@dimen/marginFromButtons"
         android:clickable="false"
+        android:contentDescription="@string/viewsIcon"
         app:icon="@drawable/ic_baseline_visibility_24"
         app:iconGravity="start"
         app:iconPadding="@dimen/standardMargin"
-        tools:text="@sample/posts.json/data/view"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/barrier2"
         app:srcCompat="@drawable/ic_baseline_visibility_24"
-        android:contentDescription="@string/viewsIcon" />
-
-
+        tools:text="@sample/posts.json/data/view" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

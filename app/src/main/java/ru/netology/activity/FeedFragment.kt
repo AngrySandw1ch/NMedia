@@ -1,29 +1,22 @@
-package ru.netology
+package ru.netology.activity
 
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.launch
-import androidx.activity.result.registerForActivityResult
-import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.observe
 import ru.netology.adapter.OnInteractionListener
 import ru.netology.adapter.PostAdapter
 import ru.netology.dto.Post
-import ru.netology.util.AndroidUtils
 import ru.netology.viewmodel.PostViewModel
 import androidx.fragment.app.viewModels;
 import androidx.navigation.fragment.findNavController
-import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.card_post.view.*
+import ru.netology.R
 import ru.netology.databinding.FragmentFeedBinding
 
 class FeedFragment : Fragment() {
@@ -90,16 +83,22 @@ class FeedFragment : Fragment() {
         binding.container.adapter = adapter
         viewModel.data.observe(viewLifecycleOwner) { state ->
             adapter.submitList(state.posts)
-            binding.progress.isVisible = state.loading
-            binding.errorGroup.isVisible = state.error
             binding.emptyText.isVisible = state.empty
-            if (state.responseCode != 200 && state.responseCode != 0) {
-                binding.serverErrorGroup?.isVisible = true
-                binding.serverErrorText?.text = getString(R.string.server_error, state.responseCode.toString())
-            }
-            binding.serverErrorGroup?.isVisible = !(state.responseCode == 200 || state.responseCode == 0)
 
         }
+
+        viewModel.dataState.observe(viewLifecycleOwner) { state ->
+            binding.progress.isVisible = state.loading
+            binding.errorGroup.isVisible = state.error
+            binding.swipeToRefresh.isRefreshing = state.refreshing
+            if (state.responseCode != 200) {
+                binding.errorGroup.isVisible = false
+                binding.serverErrorGroup?.isVisible = true
+                binding.serverErrorText?.text = getString(R.string.server_error, state.responseCode.toString())
+            } else binding.serverErrorGroup?.isVisible = false
+
+        }
+
         viewModel.edited.observe(viewLifecycleOwner) {
             if (it.id == 0L) {
                 return@observe
@@ -109,13 +108,16 @@ class FeedFragment : Fragment() {
         binding.retryButton.setOnClickListener {
             viewModel.loadPosts()
         }
+        binding.repeatRequestButton?.setOnClickListener {
+            viewModel.loadPosts()
+        }
 
         binding.fab.setOnClickListener {
             findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
         }
 
         binding.swipeToRefresh.setOnRefreshListener {
-            viewModel.loadPosts()
+            viewModel.refreshPosts()
         }
         return binding.root
     }
