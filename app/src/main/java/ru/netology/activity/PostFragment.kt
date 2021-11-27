@@ -1,4 +1,4 @@
-package ru.netology
+package ru.netology.activity
 
 import android.content.Intent
 import android.net.Uri
@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
+import ru.netology.R
 import ru.netology.databinding.FragmentPostBinding
 import ru.netology.viewmodel.PostViewModel
 

@@ -1,13 +1,12 @@
 package ru.netology.viewmodel
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
+import kotlinx.coroutines.launch
 import ru.netology.db.AppDb
 import ru.netology.dto.Post
 import ru.netology.model.FeedModel
+import ru.netology.model.FeedModelState
 import ru.netology.repository.*
 import ru.netology.util.SingleLiveEvent
 import java.io.IOException
@@ -25,46 +24,86 @@ private val empty = Post(
 
 class PostViewModel(application: Application) : AndroidViewModel(application) {
     // упрощённый вариант
-    private val repository: PostRepository = PostRepositoryImpl()
-    private val _data = MutableLiveData(FeedModel())
-    val data: LiveData<FeedModel>
-        get() = _data
+    private val repository: PostRepository =
+        PostRepositoryImpl(AppDb.getInstance(context = application).postDao())
+
+    val data: LiveData<FeedModel> =
+        repository.data.map { FeedModel(posts = it, empty = it.isEmpty()) }
+    private val _dataState = MutableLiveData<FeedModelState>()
+    val dataState: LiveData<FeedModelState>
+        get() = _dataState
+
     val edited = MutableLiveData(empty)
     private val _postCreated = SingleLiveEvent<Unit>()
     val postCreated: LiveData<Unit>
         get() = _postCreated
 
-
     init {
         loadPosts()
     }
 
-    fun loadPosts() {
-        _data.value = FeedModel(loading = true)
-        repository.getAllAsync(object : PostRepository.Callback<List<Post>> {
-            override fun onSuccess(posts: List<Post>) {
-                _data.postValue(FeedModel(posts = posts, empty = posts.isEmpty(), responseCode = repository.getResponseCode()))
-            }
+    fun loadPosts() = viewModelScope.launch {
+        try {
+            _dataState.value = FeedModelState(loading = true, responseCode = repository.responseCode)
+            repository.getAll()
+            _dataState.value = FeedModelState(responseCode = repository.responseCode)
+        } catch (e: Exception) {
+            _dataState.value = FeedModelState(error = true, responseCode = repository.responseCode)
+        }
+    }
 
-            override fun onError(e: Exception) {
-                _data.postValue(FeedModel(error = true))
-            }
-        })
+    fun refreshPosts() = viewModelScope.launch {
+        try {
+            _dataState.value = FeedModelState(refreshing = true, responseCode = repository.responseCode)
+            repository.getAll()
+            _dataState.value = FeedModelState(responseCode = repository.responseCode)
+        } catch (e: Exception) {
+            _dataState.value = FeedModelState(error = true, responseCode = repository.responseCode)
+        }
+    }
+
+    fun likeById(id: Long) = viewModelScope.launch {
+        try {
+            _dataState.value = FeedModelState(loading = true, responseCode = repository.responseCode)
+            repository.likeById(id)
+            _dataState.value = FeedModelState(responseCode = repository.responseCode)
+        } catch (e: Exception) {
+            _dataState.value = FeedModelState(error = true, responseCode = repository.responseCode)
+        }
+    }
+
+    fun unlikeById(id: Long) = viewModelScope.launch {
+        try {
+            _dataState.value = FeedModelState(loading = true, responseCode = repository.responseCode)
+            repository.dislikeById(id)
+            _dataState.value = FeedModelState(responseCode = repository.responseCode)
+        } catch (e: Exception) {
+            _dataState.value = FeedModelState(error = true, responseCode = repository.responseCode)
+        }
+    }
+
+    fun removeById(id: Long) = viewModelScope.launch {
+        try {
+            _dataState.value = FeedModelState(loading = true, responseCode = repository.responseCode)
+            repository.removeById(id)
+            _dataState.value = FeedModelState(responseCode = repository.responseCode)
+        } catch (e: Exception) {
+            _dataState.value = FeedModelState(error = true, responseCode = repository.responseCode)
+        }
     }
 
     fun save() {
         edited.value?.let {
-            repository.save(it, object : PostRepository.Callback<Post> {
-                override fun onSuccess(posts: Post) {
-                   val posts1 = _data.value?.posts ?: throw Exception("Empty data value")
-                   _data.postValue(FeedModel(posts = posts1.plus(posts), empty = posts1.isEmpty(), responseCode = repository.getResponseCode()))
-                    _postCreated.postValue(Unit)
+            _postCreated.value = Unit
+            viewModelScope.launch {
+                try {
+                    repository.save(it)
+                    _dataState.value = FeedModelState(responseCode = repository.responseCode)
+                } catch (e: Exception) {
+                    _dataState.value = FeedModelState(error = true,
+                        responseCode = repository.responseCode)
                 }
-
-                override fun onError(e: Exception) {
-                    _data.postValue(FeedModel(error = true))
-                }
-            })
+            }
         }
         edited.value = empty
     }
@@ -81,62 +120,9 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         edited.value = edited.value?.copy(content = text)
     }
 
-    fun likeById(id: Long) {
-        repository.likeById(id, object : PostRepository.Callback<Post> {
-            override fun onSuccess(posts: Post) {
-                _data.postValue(_data.value?.let { feedModel ->
-                    feedModel.posts.let { list ->
-                        list.map {
-                            if(it.id != id) it else posts
-                        }
-                    }
-                }?.let { postsList ->
-                    _data.value?.copy(posts = postsList, responseCode = repository.getResponseCode())
-                })
-            }
-
-            override fun onError(e: Exception) {
-                println(e.stackTrace)
-            }
-        })
-    }
-
-    fun unlikeById(id: Long) {
-        repository.dislikeById(id, object : PostRepository.Callback<Post> {
-            override fun onSuccess(posts: Post) {
-                _data.postValue(_data.value?.let { feedModel ->
-                    feedModel.posts.let { list ->
-                        list.map {
-                            if(it.id != id) it else posts
-                        }
-                    }
-                }?.let { postsList ->
-                    _data.value?.copy(posts = postsList, responseCode = repository.getResponseCode())
-                })
-            }
-            override fun onError(e: Exception) {
-                println(e.stackTrace)
-            }
-        })
-    }
-
-
     fun shareById(id: Long) {
-        //thread { repository.shareById(id) }
+        //
     }
 
-    fun removeById(id: Long) {
-            repository.removeById(id, object : PostRepository.Callback<Unit> {
-                override fun onSuccess(posts: Unit) {
-                    _data.postValue(
-                        _data.value?.copy(posts = _data.value?.posts.orEmpty()
-                            .filter { it.id != id },
-                            responseCode = repository.getResponseCode()))
-                }
 
-                override fun onError(e: Exception) {
-                    println(e.stackTrace)
-                }
-            })
-    }
 }
