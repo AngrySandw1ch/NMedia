@@ -29,4 +29,5 @@
     <string name="empty_posts">Посты отсутсвуют</string>
     <string name="server_error">Ошибка сервера %1$s</string>
     <string name="repeat_request_buttonText">Повторить запрос</string>
+    <string name="newer_posts_button_text">К новым постам</string>
 </resources>

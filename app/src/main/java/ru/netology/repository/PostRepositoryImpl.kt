@@ -3,6 +3,9 @@ package ru.netology.repository
 
 import android.icu.number.IntegerWidth
 import androidx.lifecycle.map
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.*
 import okhttp3.*
 import ru.netology.api.PostsApi
 import ru.netology.dto.Post
@@ -15,11 +18,12 @@ import ru.netology.entity.PostEntity
 import ru.netology.entity.toDto
 import ru.netology.entity.toEntity
 import ru.netology.error.ApiError
+import ru.netology.error.AppError
 import ru.netology.error.NetworkError
 import ru.netology.error.UnknownError
 
 class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
-    override val data = dao.getAll().map(List<PostEntity>::toDto)
+    override val data = dao.getAll().map(List<PostEntity>::toDto).flowOn(Dispatchers.Default)
     override var responseCode: Int = 0
 
     override suspend fun getAll() {
@@ -38,6 +42,22 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
             throw UnknownError
         }
     }
+
+    override fun getNewerCount(id: Long): Flow<Int> = flow {
+        while (true) {
+            delay(10_000L)
+            val response = PostsApi.service.getNewer(id)
+            if (!response.isSuccessful) {
+                throw ApiError(response.code(), response.message())
+            }
+
+            val body = response.body() ?: throw ApiError(response.code(), response.message())
+            dao.insert(body.toEntity())
+            emit(body.size)
+        }
+    }
+        .catch { e -> throw AppError.from(e) }
+        .flowOn(Dispatchers.Default)
 
     override suspend fun save(post: Post) {
         try {
@@ -77,8 +97,11 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
 
     override suspend fun likeById(id: Long) {
         try {
-            val post = data.value?.first { it.id == id }
-            val postForDb = post?.copy(likes = post.likes + 1, likedByMe = !post.likedByMe)
+            val posts = data.single()
+            val post = posts.first {
+                it.id == id
+            }
+            val postForDb = post.copy(likes = post.likes + 1, likedByMe = !post.likedByMe)
             if (postForDb != null) {
                 dao.insert(PostEntity.fromDto(postForDb))
             }
@@ -99,8 +122,11 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
 
     override suspend fun dislikeById(id: Long) {
         try {
-            val post = data.value?.first { it.id == id }
-            val postForDb = post?.copy(likes = post.likes - 1, likedByMe = !post.likedByMe)
+            val posts = data.single()
+            val post = posts.first {
+                it.id == id
+            }
+            val postForDb = post.copy(likes = post.likes - 1, likedByMe = !post.likedByMe)
             if (postForDb != null) {
                 dao.insert(PostEntity.fromDto(postForDb))
             }
