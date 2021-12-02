@@ -88,7 +88,9 @@ class FeedFragment : Fragment() {
 
         }
         viewModel.newerCount.observe(viewLifecycleOwner) {
-            binding.newerPostsButton?.isVisible = true
+            if (it != 0) {
+                binding.newerPostsButton?.isVisible = true
+            }
         }
 
         viewModel.dataState.observe(viewLifecycleOwner) { state ->
