@@ -2,6 +2,10 @@ package ru.netology.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.switchMap
 import kotlinx.coroutines.launch
 import ru.netology.db.AppDb
 import ru.netology.dto.Post
@@ -9,9 +13,11 @@ import ru.netology.model.FeedModel
 import ru.netology.model.FeedModelState
 import ru.netology.repository.*
 import ru.netology.util.SingleLiveEvent
-import java.io.IOException
-import java.lang.RuntimeException
-import kotlin.concurrent.thread
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+
 
 private val empty = Post(
     id = 0L,
@@ -28,10 +34,21 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         PostRepositoryImpl(AppDb.getInstance(context = application).postDao())
 
     val data: LiveData<FeedModel> =
-        repository.data.map { FeedModel(posts = it, empty = it.isEmpty()) }
+        repository.data.map {
+            FeedModel(posts = it, empty = it.isEmpty())
+        }.asLiveData(Dispatchers.Default)
+
     private val _dataState = MutableLiveData<FeedModelState>()
     val dataState: LiveData<FeedModelState>
         get() = _dataState
+
+    val newerCount: LiveData<Int> = data.switchMap {
+        repository.getNewerCount(it.posts.firstOrNull()?.id ?: 0L)
+            .catch { e -> e.printStackTrace() }
+            .asLiveData(Dispatchers.Default)
+    }
+
+
 
     val edited = MutableLiveData(empty)
     private val _postCreated = SingleLiveEvent<Unit>()

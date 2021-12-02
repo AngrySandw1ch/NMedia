@@ -1,4 +1,4 @@
-package ru.netology.activity
+package ru.netology.ui
 
 import android.content.Intent
 import android.net.Uri
@@ -36,7 +36,7 @@ class FeedFragment : Fragment() {
             false
         )
 
-        val adapter = PostAdapter (object: OnInteractionListener {
+        val adapter = PostAdapter(object : OnInteractionListener {
             override fun edit(post: Post) {
                 viewModel.edit(post)
                 val bundle = Bundle()
@@ -82,9 +82,15 @@ class FeedFragment : Fragment() {
 
         binding.container.adapter = adapter
         viewModel.data.observe(viewLifecycleOwner) { state ->
+            //val newPost = adapter.itemCount > 0 && adapter.itemCount < state.posts.size
             adapter.submitList(state.posts)
             binding.emptyText.isVisible = state.empty
 
+        }
+        viewModel.newerCount.observe(viewLifecycleOwner) {
+            if (it != 0) {
+                binding.newerPostsButton?.isVisible = true
+            }
         }
 
         viewModel.dataState.observe(viewLifecycleOwner) { state ->
@@ -94,7 +100,8 @@ class FeedFragment : Fragment() {
             if (state.responseCode != 200) {
                 binding.errorGroup.isVisible = false
                 binding.serverErrorGroup?.isVisible = true
-                binding.serverErrorText?.text = getString(R.string.server_error, state.responseCode.toString())
+                binding.serverErrorText?.text =
+                    getString(R.string.server_error, state.responseCode.toString())
             } else binding.serverErrorGroup?.isVisible = false
 
         }
@@ -104,10 +111,15 @@ class FeedFragment : Fragment() {
                 return@observe
             }
         }
+        binding.newerPostsButton?.setOnClickListener {
+            binding.container.scrollToPosition(0)
+            binding.newerPostsButton.isVisible = false
+        }
 
         binding.retryButton.setOnClickListener {
             viewModel.loadPosts()
         }
+
         binding.repeatRequestButton?.setOnClickListener {
             viewModel.loadPosts()
         }

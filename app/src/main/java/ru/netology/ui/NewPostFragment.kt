@@ -1,4 +1,4 @@
-package ru.netology.activity
+package ru.netology.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,18 +6,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
-import ru.netology.databinding.FragmentEditedPostBinding
+import ru.netology.databinding.FragmentNewPostBinding
 import ru.netology.util.AndroidUtils
 import ru.netology.util.StringArg
 import ru.netology.viewmodel.PostViewModel
 
-class EditedPostFragment : Fragment() {
+
+class NewPostFragment : Fragment() {
+
     val viewModel: PostViewModel by viewModels(
         ownerProducer = ::requireParentFragment
     )
+
     companion object {
-        var Bundle.edit: String? by StringArg
+        var Bundle.textArg: String? by StringArg
     }
 
     override fun onCreateView(
@@ -25,23 +29,23 @@ class EditedPostFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val binding: FragmentEditedPostBinding = FragmentEditedPostBinding.inflate(
+        val binding: FragmentNewPostBinding = FragmentNewPostBinding.inflate(
             inflater,
             container,
             false
         )
-        binding.edit.setText(arguments?.getString("edit text").toString())
 
+        arguments?.textArg
+            ?.let(binding.edit::setText)
 
         binding.ok.setOnClickListener {
             viewModel.changeContent(binding.edit.text.toString())
             viewModel.save()
-            viewModel.loadPosts()
             AndroidUtils.hideKeyboard(requireView())
-            findNavController().navigateUp()
         }
-        binding.cancel.setOnClickListener {
-            AndroidUtils.hideKeyboard(requireView())
+
+        viewModel.postCreated.observe(viewLifecycleOwner) {
+            viewModel.loadPosts()
             findNavController().navigateUp()
         }
 

@@ -1,4 +1,4 @@
-package ru.netology.activity
+package ru.netology.ui
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -9,7 +9,7 @@ import androidx.navigation.findNavController
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.firebase.messaging.FirebaseMessaging
-import ru.netology.activity.NewPostFragment.Companion.textArg
+import ru.netology.ui.NewPostFragment.Companion.textArg
 import ru.netology.R
 
 
