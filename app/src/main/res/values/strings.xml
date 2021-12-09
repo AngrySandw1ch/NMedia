@@ -8,7 +8,7 @@
     <string name="viewsIcon">Views icon</string>
     <string name="menuRemove">Delete</string>
     <string name="postText">Post Text</string>
-    <string name="descriptionPostLike"> Description Post Like</string>
+    <string name="descriptionPostLike">Description Post Like</string>
     <string name="emptyContent">Empty content</string>
     <string name="menuEdit">Edit</string>
     <string name="editMessage">Edit message</string>
@@ -29,4 +29,6 @@
     <string name="server_error">Server error %1$s</string>
     <string name="repeat_request_buttonText">Repeat request</string>
     <string name="newer_posts_button_text">to an new posts</string>
+    <string name="menu_item_save">menu save</string>
+    <string name="removePhoto_text">remove</string>
 </resources>

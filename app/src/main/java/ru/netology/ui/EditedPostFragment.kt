@@ -1,12 +1,15 @@
 package ru.netology.ui
 
+import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.view.inputmethod.InputMethodManager
+import androidx.core.content.getSystemService
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import ru.netology.R
 import ru.netology.databinding.FragmentEditedPostBinding
 import ru.netology.util.AndroidUtils
 import ru.netology.util.StringArg
@@ -31,7 +34,7 @@ class EditedPostFragment : Fragment() {
             false
         )
         binding.edit.setText(arguments?.getString("edit text").toString())
-
+        binding.edit.requestFocus()
 
         binding.ok.setOnClickListener {
             viewModel.changeContent(binding.edit.text.toString())

@@ -54,8 +54,8 @@ class PostFragment : Fragment() {
                     startActivity(shareIntent)
                 }
                 binding.post.videoPlayer.setOnClickListener {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(media))
-                    startActivity(intent)
+                    //val intent = Intent(Intent.ACTION_VIEW, Uri.parse(media))
+                   // startActivity(intent)
                 }
                 val post = this
                 binding.post.menu.setOnClickListener { menu ->

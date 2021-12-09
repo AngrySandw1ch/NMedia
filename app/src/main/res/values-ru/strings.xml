@@ -30,4 +30,6 @@
     <string name="server_error">Ошибка сервера %1$s</string>
     <string name="repeat_request_buttonText">Повторить запрос</string>
     <string name="newer_posts_button_text">К новым постам</string>
+    <string name="menu_item_save">Сохранить</string>
+    <string name="removePhoto_text">Удалить фото</string>
 </resources>

@@ -22,8 +22,9 @@ interface OnInteractionListener {
     fun edit(post: Post) {}
     fun remove(post: Post) {}
     fun share(post: Post) {}
-    fun playVideo(post: Post){}
-    fun postClicked(post: Post){}
+    fun playVideo(post: Post) {}
+    fun postClicked(post: Post) {}
+    fun imageClicked(post: Post) {}
 }
 
 class PostAdapter(
@@ -56,9 +57,11 @@ class PostViewHolder(
             like.isChecked = post.likedByMe
             share.text = if (post.shares == 0) "" else PostUtils.formatNum(post.shares)
             like.text = if (post.likes == 0) "" else PostUtils.formatNum(post.likes)
-            mediaLayout.visibility = if (post.media.isNullOrBlank()) View.GONE else View.VISIBLE
+            imageContent.visibility =
+                if (post.attachment?.url.isNullOrBlank()) View.GONE else View.VISIBLE
 
             val url = "http://10.0.2.2:9999/avatars/${post.authorAvatar}"
+            val imageUrl = "http://10.0.2.2:9999/media/${post.attachment?.url}"
 
             Glide.with(avatar)
                 .load(url)
@@ -68,6 +71,12 @@ class PostViewHolder(
                 .timeout(30_000)
                 .into(avatar)
 
+            Glide.with(imageContent)
+                .load(imageUrl)
+                .placeholder(R.drawable.ic_round_cloud_download_24)
+                .error(R.drawable.ic_baseline_error_24)
+                .timeout(30_000)
+                .into(imageContent)
 
             playVideoButton.setOnClickListener {
                 onInteractionListener.playVideo(post)
@@ -81,6 +90,9 @@ class PostViewHolder(
             }
             content.setOnClickListener {
                 onInteractionListener.postClicked(post)
+            }
+            imageContent.setOnClickListener {
+                onInteractionListener.imageClicked(post)
             }
 
 

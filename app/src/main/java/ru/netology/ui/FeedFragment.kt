@@ -45,8 +45,8 @@ class FeedFragment : Fragment() {
             }
 
             override fun playVideo(post: Post) {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(post.media))
-                startActivity(intent)
+                //val intent = Intent(Intent.ACTION_VIEW, Uri.parse(post.media))
+                //startActivity(intent)
             }
 
             override fun like(post: Post) {
@@ -77,6 +77,14 @@ class FeedFragment : Fragment() {
                     putLong("id", post.id)
                 }
                 findNavController().navigate(R.id.action_feedFragment_to_postFragment, bundle)
+            }
+
+            override fun imageClicked(post: Post) {
+                val bundle = Bundle().apply {
+                    putString("image_url", post.attachment?.url)
+                }
+                findNavController().navigate(R.id.action_feedFragment_to_imageFragment, bundle)
+
             }
         })
 
@@ -112,7 +120,7 @@ class FeedFragment : Fragment() {
             }
         }
         binding.newerPostsButton?.setOnClickListener {
-            binding.container.scrollToPosition(0)
+            binding.container.smoothScrollToPosition(0)
             binding.newerPostsButton.isVisible = false
         }
 
