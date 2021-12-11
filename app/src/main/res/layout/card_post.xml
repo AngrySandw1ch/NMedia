@@ -110,7 +110,7 @@
         android:clickable="true"
         android:focusable="true"
         android:padding="@dimen/ordinaryPadding"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@id/barrier2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -15,6 +15,8 @@ import ru.netology.dto.Post
 import ru.netology.viewmodel.PostViewModel
 import androidx.fragment.app.viewModels;
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.card_post.view.*
 import ru.netology.R
 import ru.netology.databinding.FragmentFeedBinding
@@ -88,7 +90,12 @@ class FeedFragment : Fragment() {
             }
         })
 
+        val itemDecoration = DividerItemDecoration(requireActivity(), RecyclerView.VERTICAL).apply {
+            setDrawable(resources.getDrawable(R.drawable.divider_drawable))
+        }
         binding.container.adapter = adapter
+        binding.container.addItemDecoration(itemDecoration)
+
         viewModel.data.observe(viewLifecycleOwner) { state ->
             //val newPost = adapter.itemCount > 0 && adapter.itemCount < state.posts.size
             adapter.submitList(state.posts)
