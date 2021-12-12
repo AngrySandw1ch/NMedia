@@ -31,7 +31,7 @@ class ImageFragment : Fragment() {
         val url = BASE_URL + arguments?.getString("image_url")
         Glide.with(binding.image)
             .load(url)
-            .override(1000, 700)
+            //.override(1000, 700)
             .placeholder(R.drawable.ic_round_cloud_download_24)
             .error(R.drawable.ic_baseline_error_24)
             .timeout(30_000)

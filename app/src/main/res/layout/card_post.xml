@@ -111,6 +111,7 @@
         android:focusable="true"
         android:padding="@dimen/ordinaryPadding"
         android:visibility="visible"
+        android:scaleType="center"
         app:layout_constraintBottom_toTopOf="@id/barrier2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
