@@ -57,6 +57,7 @@ class PostViewHolder(
             like.isChecked = post.likedByMe
             share.text = if (post.shares == 0) "" else PostUtils.formatNum(post.shares)
             like.text = if (post.likes == 0) "" else PostUtils.formatNum(post.likes)
+            menu.visibility = if (post.ownedByMe) View.VISIBLE else View.GONE
             imageContent.visibility =
                 if (post.attachment?.url.isNullOrBlank()) View.GONE else View.VISIBLE
 
@@ -100,6 +101,7 @@ class PostViewHolder(
             menu.setOnClickListener { it ->
                 PopupMenu(it.context, it).apply {
                     inflate(R.menu.options_post)
+                    menu.setGroupVisible(R.id.owned, post.ownedByMe)
                     setOnMenuItemClickListener { menuItem ->
                         when (menuItem.itemId) {
                             R.id.menu_remove -> {

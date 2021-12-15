@@ -3,7 +3,10 @@ package ru.netology.ui
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.google.android.gms.common.ConnectionResult
@@ -11,9 +14,12 @@ import com.google.android.gms.common.GoogleApiAvailability
 import com.google.firebase.messaging.FirebaseMessaging
 import ru.netology.ui.NewPostFragment.Companion.textArg
 import ru.netology.R
+import ru.netology.auth.AppAuth
+import ru.netology.viewmodel.AuthViewModel
 
 
 class AppActivity : AppCompatActivity(R.layout.activity_app) {
+    private val viewModel: AuthViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         intent?.let {
@@ -37,7 +43,41 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
         }
         lifecycleScope
 
+        viewModel.data.observe(this) {
+            invalidateOptionsMenu()
+        }
+
+
         checkGoogleApiAvailability()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+
+        menu.let {
+            it.setGroupVisible(R.id.unauthenticated, !viewModel.authenticated)
+            it.setGroupVisible(R.id.authenticated, viewModel.authenticated)
+        }
+
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            R.id.signin -> {
+                val nav = findNavController(R.id.nav_host_fragment)
+                nav.navigate(R.id.action_feedFragment_to_signInFragment)
+                true
+            }
+            R.id.signup -> {
+                true
+            }
+            R.id.signout -> {
+                AppAuth.getInstance().removeAuth()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun checkGoogleApiAvailability() {
