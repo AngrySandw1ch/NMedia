@@ -18,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.card_post.view.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import ru.netology.R
 import ru.netology.databinding.FragmentFeedBinding
 
@@ -26,6 +27,7 @@ class FeedFragment : Fragment() {
     val viewModel: PostViewModel by viewModels(
         ownerProducer = ::requireParentFragment
     )
+
 
     override fun onCreateView(
         inflater: LayoutInflater,

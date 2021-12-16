@@ -32,4 +32,10 @@
     <string name="newer_posts_button_text">К новым постам</string>
     <string name="menu_item_save">Сохранить</string>
     <string name="removePhoto_text">Удалить фото</string>
+    <string name="sign_in_menu_item">войти</string>
+    <string name="sign_up_menu_item">зарегистрироваться</string>
+    <string name="sign_out_menu_item">выйти</string>
+    <string name="login_edit_text">Войти в аккаунт</string>
+    <string name="password_edit_text">Пароль</string>
+    <string name="enter_button">Войти</string>
 </resources>

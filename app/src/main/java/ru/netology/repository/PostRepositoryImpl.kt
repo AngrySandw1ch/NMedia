@@ -102,21 +102,12 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
 
     override suspend fun likeById(id: Long) {
         try {
-            val posts = data.single()
-            val post = posts.first {
-                it.id == id
-            }
-            val postForDb = post.copy(likes = post.likes + 1, likedByMe = !post.likedByMe)
-            if (postForDb != null) {
-                dao.insert(PostEntity.fromDto(postForDb))
-            }
             val response = PostsApi.service.likeById(id)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
-            if (response.body() == null) {
-                throw ApiError(response.code(), response.message())
-            }
+            val postForDb = response.body() ?: throw ApiError(response.code(), response.message())
+            dao.insert(PostEntity.fromDto(postForDb))
             responseCode = response.code()
         } catch (e: IOException) {
             throw NetworkError
@@ -127,21 +118,12 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
 
     override suspend fun dislikeById(id: Long) {
         try {
-            val posts = data.single()
-            val post = posts.first {
-                it.id == id
-            }
-            val postForDb = post.copy(likes = post.likes - 1, likedByMe = !post.likedByMe)
-            if (postForDb != null) {
-                dao.insert(PostEntity.fromDto(postForDb))
-            }
             val response = PostsApi.service.dislikeById(id)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
-            if (response.body() == null) {
-                throw ApiError(response.code(), response.message())
-            }
+            val postForDb = response.body() ?: throw ApiError(response.code(), response.message())
+            dao.insert(PostEntity.fromDto(postForDb))
             responseCode = response.code()
         } catch (e: IOException) {
             throw NetworkError
