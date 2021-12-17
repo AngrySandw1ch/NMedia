@@ -1,8 +1,6 @@
 package ru.netology.repository
 
 
-import android.icu.number.IntegerWidth
-import androidx.lifecycle.map
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
@@ -11,9 +9,6 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import ru.netology.api.PostsApi
 import ru.netology.dto.Post
 import java.io.IOException
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Call
 import ru.netology.dao.PostDao
 import ru.netology.dto.Attachment
 import ru.netology.dto.Media

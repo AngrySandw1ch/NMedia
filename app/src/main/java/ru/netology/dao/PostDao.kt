@@ -1,9 +1,7 @@
 package ru.netology.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
-import ru.netology.dto.Post
 import ru.netology.entity.PostEntity
 import ru.netology.enumeration.AttachmentType
 

@@ -1,7 +1,6 @@
 package ru.netology.ui
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +17,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.card_post.view.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import ru.netology.R
 import ru.netology.databinding.FragmentFeedBinding
 
