@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import ru.netology.api.PostsApi
+import ru.netology.api.Api
 import ru.netology.dto.UserKey
 import java.lang.RuntimeException
 
@@ -18,7 +18,7 @@ class SignInViewModel: ViewModel() {
         get() = _data
 
     fun signIn(login: String, password: String, context: Context) = viewModelScope.launch {
-        val response = PostsApi.service.updateUser(login, password)
+        val response = Api.service.updateUser(login, password)
         if (!response.isSuccessful) {
             Toast.makeText(context, "Incorrect login or password", Toast.LENGTH_LONG).show()
             return@launch

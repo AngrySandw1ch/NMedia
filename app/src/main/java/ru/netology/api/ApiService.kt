@@ -3,17 +3,13 @@ package ru.netology.api
 import okhttp3.MultipartBody
 import ru.netology.BuildConfig
 import okhttp3.OkHttpClient
-import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 import ru.netology.auth.AppAuth
-import ru.netology.dto.Media
-import ru.netology.dto.Post
-import ru.netology.dto.UserKey
+import ru.netology.dto.*
 
 //private const val BASE_URL = "${BuildConfig.BASE_URL}/api/slow/"
 private const val BASE_URL = "http://10.0.2.2:9999/api/slow/"
@@ -43,7 +39,7 @@ private val retrofit = Retrofit.Builder()
     .client(okhttp)
     .build()
 
-interface PostsApiService {
+interface ApiService {
     @GET("posts")
     suspend fun getAll(): Response<List<Post>>
 
@@ -55,6 +51,12 @@ interface PostsApiService {
 
     @POST("posts")
     suspend fun save(@Body post: Post): Response<Post>
+
+    @POST("users/push-tokens")
+    suspend fun save(@Body pushToken: PushToken): Response<Unit>
+
+    @POST("pushes")
+    suspend fun getPush(@Path("token ") token: String): Response<Push>
 
     @DELETE("posts/{id}")
     suspend fun removeById(@Path("id") id: Long): Response<Unit>
@@ -74,8 +76,8 @@ interface PostsApiService {
     suspend fun updateUser(@Field("login") login: String, @Field("pass") pass: String): Response<UserKey>
 }
 
-object PostsApi {
-    val service: PostsApiService by lazy {
-        retrofit.create(PostsApiService::class.java)
+object Api {
+    val service: ApiService by lazy {
+        retrofit.create(ApiService::class.java)
     }
 }
