@@ -55,9 +55,6 @@ interface ApiService {
     @POST("users/push-tokens")
     suspend fun save(@Body pushToken: PushToken): Response<Unit>
 
-    @POST("pushes")
-    suspend fun getPush(@Path("token ") token: String): Response<Push>
-
     @DELETE("posts/{id}")
     suspend fun removeById(@Path("id") id: Long): Response<Unit>
 

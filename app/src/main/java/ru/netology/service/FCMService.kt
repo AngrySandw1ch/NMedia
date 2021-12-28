@@ -26,7 +26,6 @@ class FCMService : FirebaseMessagingService() {
     private val content = "content"
     private val channelId = "remote"
     private val gson = Gson()
-    private var serverToken = Push()
 
     override fun onCreate() {
         super.onCreate()
@@ -43,41 +42,25 @@ class FCMService : FirebaseMessagingService() {
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
-        val appToken = AppAuth.getInstance().authStateFlow.value
-        appToken.token?.let { updatePushToken(it) }
+        val localId = AppAuth.getInstance().authStateFlow.value.id
+        val push = message.data[content]?.let {
+            gson.fromJson(it, Push::class.java)
+        }
+        val serverUserId = push?.recipientId
 
-        if (appToken.id == serverToken.recipientId) {
-            showNotification(serverToken.recipientId, gson.fromJson(message.data[content], String::class.java))
-        } else if (appToken.id != serverToken.recipientId && serverToken.recipientId == 0L) {
+        if (localId == serverUserId) {
+            showNotification(serverUserId, push.content)
+        } else if (localId != serverUserId && serverUserId == 0L) {
             AppAuth.getInstance().sendPushToken()
-        } else if (appToken.id != serverToken.recipientId && serverToken.recipientId != 0L) {
+        } else if (localId != serverUserId && serverUserId != 0L) {
             AppAuth.getInstance().sendPushToken()
         } else {
-            showNotification(Random.nextLong(100,200), gson.fromJson(message.data[content], String::class.java))
+            showNotification(Random.nextLong(100,200),push.content)
         }
-
-        //println(message.data["content"])
     }
 
     override fun onNewToken(token: String) {
         AppAuth.getInstance().sendPushToken(token)
-    }
-
-    private fun updatePushToken(token: String) {
-        try {
-            CoroutineScope(Dispatchers.Default).launch {
-                val response = Api.service.getPush(token)
-                if (!response.isSuccessful) {
-                    throw ApiError(response.code(), response.message())
-                }
-                serverToken = response.body() ?: throw ApiError(response.code(), response.message())
-            }
-        } catch (e: IOException) {
-            throw NetworkError
-        } catch (e: Exception) {
-            throw UnknownError
-        }
-
     }
 
     private fun showNotification(id: Long?, content: String?) {
