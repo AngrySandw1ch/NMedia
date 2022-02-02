@@ -3,10 +3,12 @@ package ru.netology.viewmodel
 import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import ru.netology.api.ApiService
 import ru.netology.db.AppDb
 import ru.netology.dto.Post
 import ru.netology.model.FeedModel
@@ -17,6 +19,7 @@ import ru.netology.auth.AppAuth
 import ru.netology.dto.MediaUpload
 import ru.netology.model.PhotoModel
 import java.io.File
+import javax.inject.Inject
 
 
 private val empty = Post(
@@ -30,13 +33,13 @@ private val empty = Post(
 )
 
 @ExperimentalCoroutinesApi
-class PostViewModel(application: Application) : AndroidViewModel(application) {
-    // упрощённый вариант
-    private val repository: PostRepository =
-        PostRepositoryImpl(AppDb.getInstance(context = application).postDao())
+@HiltViewModel
+class PostViewModel @Inject constructor(
+    private val repository: PostRepository,
+    auth: AppAuth
+    ) : ViewModel() {
 
-
-    val data: LiveData<FeedModel> = AppAuth.getInstance()
+    val data: LiveData<FeedModel> = auth
         .authStateFlow
         .flatMapLatest { (myId, _) ->
             repository.data

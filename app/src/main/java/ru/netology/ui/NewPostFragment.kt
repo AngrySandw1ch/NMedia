@@ -14,13 +14,14 @@ import androidx.navigation.fragment.findNavController
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.github.dhaval2404.imagepicker.constant.ImageProvider
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.R
 import ru.netology.databinding.FragmentNewPostBinding
 import ru.netology.util.AndroidUtils
 import ru.netology.util.StringArg
 import ru.netology.viewmodel.PostViewModel
 
-
+@AndroidEntryPoint
 class NewPostFragment : Fragment() {
 
     val viewModel: PostViewModel by viewModels(

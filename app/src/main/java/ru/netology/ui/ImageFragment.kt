@@ -8,10 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
+import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.R
 import ru.netology.databinding.FragmentImageBinding
 
-
+@AndroidEntryPoint
 class ImageFragment : Fragment() {
     private val BASE_URL = "http://10.0.2.2:9999/media/"
     private lateinit var appContext: AppActivity

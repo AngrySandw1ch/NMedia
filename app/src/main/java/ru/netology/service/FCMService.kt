@@ -9,23 +9,21 @@ import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.Gson
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.R
-import ru.netology.api.Api
 import ru.netology.auth.AppAuth
 import ru.netology.dto.Push
-import ru.netology.error.ApiError
-import ru.netology.error.NetworkError
-import ru.netology.error.UnknownError
-import java.io.IOException
+import javax.inject.Inject
 import kotlin.random.Random
 
+@AndroidEntryPoint
 class FCMService : FirebaseMessagingService() {
     private val content = "content"
     private val channelId = "remote"
     private val gson = Gson()
+
+    @Inject
+    lateinit var auth: AppAuth
 
     override fun onCreate() {
         super.onCreate()
@@ -42,7 +40,7 @@ class FCMService : FirebaseMessagingService() {
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
-        val localId = AppAuth.getInstance().authStateFlow.value.id
+        val localId = auth.authStateFlow.value.id
         val push = message.data[content]?.let {
             gson.fromJson(it, Push::class.java)
         }
@@ -51,16 +49,16 @@ class FCMService : FirebaseMessagingService() {
         if (localId == serverUserId) {
             showNotification(serverUserId, push.content)
         } else if (localId != serverUserId && serverUserId == 0L) {
-            AppAuth.getInstance().sendPushToken()
+            auth.sendPushToken()
         } else if (localId != serverUserId && serverUserId != 0L) {
-            AppAuth.getInstance().sendPushToken()
+            auth.sendPushToken()
         } else {
             showNotification(Random.nextLong(100,200),push.content)
         }
     }
 
     override fun onNewToken(token: String) {
-        AppAuth.getInstance().sendPushToken(token)
+        auth.sendPushToken(token)
     }
 
     private fun showNotification(id: Long?, content: String?) {
