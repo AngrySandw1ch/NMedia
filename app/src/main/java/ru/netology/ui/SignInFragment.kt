@@ -7,15 +7,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.R
 import ru.netology.auth.AppAuth
 import ru.netology.databinding.FragmentSignInBinding
 import ru.netology.util.AndroidUtils
 import ru.netology.viewmodel.SignInViewModel
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SignInFragment : Fragment() {
     private lateinit var binding: FragmentSignInBinding
     private val viewModel: SignInViewModel by viewModels()
+    @Inject
+    lateinit var auth: AppAuth
 
 
     override fun onCreateView(
@@ -35,7 +40,7 @@ class SignInFragment : Fragment() {
 
         viewModel.data.observe(viewLifecycleOwner) {
             if (it.id != 0L) {
-                AppAuth.getInstance().setAuth(it.id, it.token)
+                auth.setAuth(it.id, it.token)
                 findNavController().navigate(R.id.action_signInFragment_to_feedFragment)
                 AndroidUtils.hideKeyboard(requireView())
             }

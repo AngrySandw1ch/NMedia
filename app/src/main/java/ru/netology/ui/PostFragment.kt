@@ -10,10 +10,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import ru.netology.R
 import ru.netology.databinding.FragmentPostBinding
 import ru.netology.viewmodel.PostViewModel
 
+@ExperimentalCoroutinesApi
+@AndroidEntryPoint
 class PostFragment : Fragment() {
     val viewModel: PostViewModel by viewModels(
         ownerProducer = ::requireParentFragment
@@ -23,7 +27,7 @@ class PostFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val binding = FragmentPostBinding.inflate(
             inflater,
             container,
