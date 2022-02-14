@@ -1,15 +1,15 @@
 package ru.netology.viewmodel
 
-import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.*
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import androidx.paging.map
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import ru.netology.api.ApiService
-import ru.netology.db.AppDb
 import ru.netology.dto.Post
 import ru.netology.model.FeedModel
 import ru.netology.model.FeedModelState
@@ -39,27 +39,24 @@ class PostViewModel @Inject constructor(
     auth: AppAuth
     ) : ViewModel() {
 
-    val data: LiveData<FeedModel> = auth
+    private val cached = repository
+        .data
+        .cachedIn(viewModelScope)
+
+    val data: Flow<PagingData<Post>> = auth
         .authStateFlow
         .flatMapLatest { (myId, _) ->
-            repository.data
-                .map { posts ->
-                    FeedModel(
-                        posts.map { it.copy(ownedByMe = it.authorId == myId) },
-                        posts.isEmpty()
-                    )
-                }
-        }.asLiveData(Dispatchers.Default)
+           cached.map {
+               it.map { post ->
+                   post.copy(ownedByMe = post.authorId == myId)
+               }
+           }
+        }
 
     private val _dataState = MutableLiveData<FeedModelState>()
     val dataState: LiveData<FeedModelState>
         get() = _dataState
 
-    val newerCount: LiveData<Int> = data.switchMap {
-        repository.getNewerCount(it.posts.firstOrNull()?.id ?: 0L)
-            .catch { e -> e.printStackTrace() }
-            .asLiveData(Dispatchers.Default)
-    }
 
     private val noPhoto = PhotoModel()
     private val _photo = MutableLiveData(noPhoto)
@@ -78,16 +75,6 @@ class PostViewModel @Inject constructor(
     fun loadPosts() = viewModelScope.launch {
         try {
             _dataState.value = FeedModelState(loading = true, responseCode = repository.responseCode)
-            repository.getAll()
-            _dataState.value = FeedModelState(responseCode = repository.responseCode)
-        } catch (e: Exception) {
-            _dataState.value = FeedModelState(error = true, responseCode = repository.responseCode)
-        }
-    }
-
-    fun refreshPosts() = viewModelScope.launch {
-        try {
-            _dataState.value = FeedModelState(refreshing = true, responseCode = repository.responseCode)
             repository.getAll()
             _dataState.value = FeedModelState(responseCode = repository.responseCode)
         } catch (e: Exception) {

@@ -13,14 +13,20 @@ import ru.netology.adapter.PostAdapter
 import ru.netology.dto.Post
 import ru.netology.viewmodel.PostViewModel
 import androidx.fragment.app.viewModels;
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.card_post.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
 import ru.netology.R
+import ru.netology.auth.AppAuth
 import ru.netology.databinding.FragmentFeedBinding
+import javax.inject.Inject
+
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class FeedFragment : Fragment() {
@@ -29,6 +35,8 @@ class FeedFragment : Fragment() {
         ownerProducer = ::requireParentFragment
     )
 
+    @Inject
+    lateinit var appAuth: AppAuth
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -93,21 +101,32 @@ class FeedFragment : Fragment() {
             }
         })
 
-        val itemDecoration = DividerItemDecoration(requireActivity(), RecyclerView.VERTICAL).apply {
-            setDrawable(resources.getDrawable(R.drawable.divider_drawable))
-        }
+        val itemDecoration = DividerItemDecoration(requireActivity(), RecyclerView.VERTICAL)
+            .apply {
+                setDrawable(resources.getDrawable(R.drawable.divider_drawable))
+            }
+
         binding.container.adapter = adapter
         binding.container.addItemDecoration(itemDecoration)
 
-        viewModel.data.observe(viewLifecycleOwner) { state ->
-            //val newPost = adapter.itemCount > 0 && adapter.itemCount < state.posts.size
-            adapter.submitList(state.posts)
-            binding.emptyText.isVisible = state.empty
-
+        lifecycleScope.launchWhenCreated {
+            appAuth.authStateFlow.collectLatest {
+                    adapter.refresh()
+            }
         }
-        viewModel.newerCount.observe(viewLifecycleOwner) {
-            if (it != 0) {
-                binding.newerPostsButton?.isVisible = true
+
+        lifecycleScope.launchWhenCreated {
+            viewModel.data.collectLatest {
+                adapter.submitData(it)
+            }
+        }
+
+        lifecycleScope.launchWhenCreated {
+            adapter.loadStateFlow.collectLatest { state ->
+                binding.swipeToRefresh.isRefreshing =
+                    state.refresh is LoadState.Loading ||
+                            state.prepend is LoadState.Loading ||
+                            state.append is LoadState.Loading
             }
         }
 
@@ -121,7 +140,6 @@ class FeedFragment : Fragment() {
                 binding.serverErrorText?.text =
                     getString(R.string.server_error, state.responseCode.toString())
             } else binding.serverErrorGroup?.isVisible = false
-
         }
 
         viewModel.edited.observe(viewLifecycleOwner) {
@@ -129,11 +147,6 @@ class FeedFragment : Fragment() {
                 return@observe
             }
         }
-        binding.newerPostsButton?.setOnClickListener {
-            binding.container.smoothScrollToPosition(0)
-            binding.newerPostsButton.isVisible = false
-        }
-
         binding.retryButton.setOnClickListener {
             viewModel.loadPosts()
         }
@@ -147,7 +160,7 @@ class FeedFragment : Fragment() {
         }
 
         binding.swipeToRefresh.setOnRefreshListener {
-            viewModel.refreshPosts()
+            adapter.refresh()
         }
         return binding.root
     }
