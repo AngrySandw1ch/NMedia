@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -12,6 +13,7 @@ import ru.netology.util.PostUtils
 import ru.netology.R
 import ru.netology.databinding.CardPostBinding
 import ru.netology.dto.Post
+import java.lang.RuntimeException
 
 interface OnInteractionListener {
     fun like(post: Post) {}
@@ -26,7 +28,7 @@ interface OnInteractionListener {
 class PostAdapter(
     private val onInteractionListener: OnInteractionListener
 ) :
-    ListAdapter<Post, PostViewHolder>(PostDiffCallBack()) {
+    PagingDataAdapter<Post, PostViewHolder>(PostDiffCallBack()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val binding = CardPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -35,7 +37,7 @@ class PostAdapter(
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val post = getItem(position)
-        holder.bind(post)
+        holder.bind(post ?: throw RuntimeException("nullable post in adapter"))
     }
 
 }
