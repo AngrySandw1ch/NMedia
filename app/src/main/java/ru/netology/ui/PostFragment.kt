@@ -15,6 +15,7 @@ import androidx.paging.map
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import ru.netology.R
 import ru.netology.databinding.FragmentPostBinding
 import ru.netology.viewmodel.PostViewModel
@@ -39,7 +40,7 @@ class PostFragment : Fragment() {
         val postId = arguments?.getLong("id")
 
         lifecycleScope.launchWhenCreated {
-            viewModel.data.collect {
+            viewModel.data.collectLatest {
                 it.map { post ->
                     if (post.id == postId) {
                         binding.post.content.text = post.content
