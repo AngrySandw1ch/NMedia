@@ -16,6 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.map
 import ru.netology.R
 import ru.netology.databinding.FragmentPostBinding
 import ru.netology.viewmodel.PostViewModel
@@ -39,10 +40,11 @@ class PostFragment : Fragment() {
         )
         val postId = arguments?.getLong("id")
 
+
         lifecycleScope.launchWhenCreated {
-            viewModel.data.collectLatest {
-                it.map { post ->
-                    if (post.id == postId) {
+            if (postId != null) {
+                viewModel.getById(postId).collectLatest { post ->
+                    post?.let {
                         binding.post.content.text = post.content
                         binding.post.published.text = post.published
                         binding.post.author.text = post.author
@@ -96,12 +98,12 @@ class PostFragment : Fragment() {
                 }
             }
         }
+
         viewModel.edited.observe(viewLifecycleOwner) {
             if (it.id == 0L) {
                 return@observe
             }
         }
-
         return binding.root
     }
 }

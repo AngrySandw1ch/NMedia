@@ -80,6 +80,12 @@ class PostRepositoryImpl @Inject constructor(
         .catch { e -> throw AppError.from(e) }
         .flowOn(Dispatchers.Default)
 
+    override fun getById(id: Long): Flow<Post?> {
+        return postDao.getById(id).map {
+            it?.toDto()
+        }
+    }
+
     override suspend fun save(post: Post) {
         try {
             val response = apiService.save(post)
