@@ -8,14 +8,11 @@ import kotlinx.coroutines.flow.*
 import okhttp3.*
 import okhttp3.RequestBody.Companion.asRequestBody
 import ru.netology.api.ApiService
-import ru.netology.dto.Post
 import java.io.IOException
 import ru.netology.dao.PostDao
 import ru.netology.dao.PostRemoteKeyDao
 import ru.netology.db.AppDb
-import ru.netology.dto.Attachment
-import ru.netology.dto.Media
-import ru.netology.dto.MediaUpload
+import ru.netology.dto.*
 import ru.netology.entity.PostEntity
 import ru.netology.entity.toEntity
 import ru.netology.enumeration.AttachmentType
@@ -36,7 +33,7 @@ class PostRepositoryImpl @Inject constructor(
 
     @OptIn(ExperimentalPagingApi::class)
     override val data: Flow<PagingData<Post>> = Pager(
-        config = PagingConfig(pageSize = 25),
+        config = PagingConfig(pageSize = 5),
         remoteMediator = PostRemoteMediator(apiService,appDb, postDao,postRemoteKeyDao),
         pagingSourceFactory = postDao::pagingSource
     ).flow.map {

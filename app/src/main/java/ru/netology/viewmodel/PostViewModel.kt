@@ -47,7 +47,7 @@ class PostViewModel @Inject constructor(
         .data
         .map { pagingData ->
             pagingData.insertSeparators(
-                generator = { before, after ->
+                generator = { before, _ ->
                     if (before?.id?.rem(5) != 0L) null else
                         Ad(
                             Random.nextLong(),

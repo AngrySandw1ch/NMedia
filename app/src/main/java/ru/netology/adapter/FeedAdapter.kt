@@ -30,7 +30,7 @@ interface OnInteractionListener {
 class FeedAdapter(
     private val onInteractionListener: OnInteractionListener
 ) :
-    PagingDataAdapter<FeedItem, PostViewHolder>(FeedItemDiffCallBack()) {
+    PagingDataAdapter<FeedItem, RecyclerView.ViewHolder>(FeedItemDiffCallBack()) {
     private val typeAd = 0
     private val typePost = 1
 
@@ -57,7 +57,7 @@ class FeedAdapter(
         }
     }
 
-    override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         getItem(position)?.let {
             when (it) {
                 is Post -> (holder as? PostViewHolder)?.bind(it)

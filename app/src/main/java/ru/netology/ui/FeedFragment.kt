@@ -23,6 +23,7 @@ import kotlinx.android.synthetic.main.card_post.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import ru.netology.R
+import ru.netology.adapter.PagingLoadStateAdapter
 import ru.netology.auth.AppAuth
 import ru.netology.databinding.FragmentFeedBinding
 import javax.inject.Inject
@@ -106,7 +107,18 @@ class FeedFragment : Fragment() {
                 setDrawable(resources.getDrawable(R.drawable.divider_drawable))
             }
 
-        binding.container.adapter = adapter
+        binding.container.adapter = adapter.withLoadStateHeaderAndFooter(
+            header = PagingLoadStateAdapter(object : PagingLoadStateAdapter.OnInteractionListener {
+                override fun onRetry() {
+                    adapter.retry()
+                }
+            }),
+            footer = PagingLoadStateAdapter(object : PagingLoadStateAdapter.OnInteractionListener {
+                override fun onRetry() {
+                    adapter.retry()
+                }
+            })
+        )
         binding.container.addItemDecoration(itemDecoration)
 
         lifecycleScope.launchWhenCreated {
@@ -124,9 +136,7 @@ class FeedFragment : Fragment() {
         lifecycleScope.launchWhenCreated {
             adapter.loadStateFlow.collectLatest { state ->
                 binding.swipeToRefresh.isRefreshing =
-                    state.refresh is LoadState.Loading ||
-                            state.prepend is LoadState.Loading ||
-                            state.append is LoadState.Loading
+                    state.refresh is LoadState.Loading
             }
         }
 
