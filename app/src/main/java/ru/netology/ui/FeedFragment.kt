@@ -9,7 +9,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.observe
 import ru.netology.adapter.OnInteractionListener
-import ru.netology.adapter.PostAdapter
+import ru.netology.adapter.FeedAdapter
 import ru.netology.dto.Post
 import ru.netology.viewmodel.PostViewModel
 import androidx.fragment.app.viewModels;
@@ -49,7 +49,7 @@ class FeedFragment : Fragment() {
             false
         )
 
-        val adapter = PostAdapter(object : OnInteractionListener {
+        val adapter = FeedAdapter(object : OnInteractionListener {
             override fun edit(post: Post) {
                 viewModel.edit(post)
                 val bundle = Bundle()

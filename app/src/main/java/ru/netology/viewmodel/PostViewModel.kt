@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import androidx.paging.insertSeparators
 import androidx.paging.map
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -16,10 +17,13 @@ import ru.netology.model.FeedModelState
 import ru.netology.repository.*
 import ru.netology.util.SingleLiveEvent
 import ru.netology.auth.AppAuth
+import ru.netology.dto.Ad
+import ru.netology.dto.FeedItem
 import ru.netology.dto.MediaUpload
 import ru.netology.model.PhotoModel
 import java.io.File
 import javax.inject.Inject
+import kotlin.random.Random
 
 
 private val empty = Post(
@@ -39,18 +43,30 @@ class PostViewModel @Inject constructor(
     auth: AppAuth
     ) : ViewModel() {
 
-    private val cached = repository
+    private val cached: Flow<PagingData<FeedItem>> = repository
         .data
+        .map { pagingData ->
+            pagingData.insertSeparators(
+                generator = { before, after ->
+                    if (before?.id?.rem(5) != 0L) null else
+                        Ad(
+                            Random.nextLong(),
+                            "https://netology.ru",
+                            "figma.jpg"
+                        )
+                }
+            )
+        }
         .cachedIn(viewModelScope)
 
-    val data: Flow<PagingData<Post>> = auth
-        .authStateFlow
+    val data: Flow<PagingData<FeedItem>> = auth.authStateFlow
         .flatMapLatest { (myId, _) ->
-           cached.map {
-               it.map { post ->
-                   post.copy(ownedByMe = post.authorId == myId)
-               }
-           }
+            cached
+                .map { pagingData ->
+                    pagingData.map { item ->
+                        if (item !is Post) item else item.copy(ownedByMe = item.authorId == myId)
+                    }
+                }
         }
 
     private val _dataState = MutableLiveData<FeedModelState>()

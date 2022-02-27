@@ -31,6 +31,7 @@
     <string name="newer_posts_button_text">to an new posts</string>
     <string name="menu_item_save">menu save</string>
     <string name="removePhoto_text">remove</string>
+    <string name="ad">Ad</string>
 
     <!-- menu main items  -->
     <string name="sign_in_menu_item">sign in</string>
@@ -41,5 +42,6 @@
     <string name="login_edit_text">login</string>
     <string name="password_edit_text">Password</string>
     <string name="enter_button">Enter</string>
+
 
 </resources>

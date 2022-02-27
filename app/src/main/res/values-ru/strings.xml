@@ -38,4 +38,5 @@
     <string name="login_edit_text">Войти в аккаунт</string>
     <string name="password_edit_text">Пароль</string>
     <string name="enter_button">Войти</string>
+    <string name="ad">Реклама</string>
 </resources>
