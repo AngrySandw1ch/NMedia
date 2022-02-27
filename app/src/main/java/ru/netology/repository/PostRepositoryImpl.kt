@@ -1,9 +1,7 @@
 package ru.netology.repository
 
 
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
+import androidx.paging.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
@@ -13,11 +11,12 @@ import ru.netology.api.ApiService
 import ru.netology.dto.Post
 import java.io.IOException
 import ru.netology.dao.PostDao
+import ru.netology.dao.PostRemoteKeyDao
+import ru.netology.db.AppDb
 import ru.netology.dto.Attachment
 import ru.netology.dto.Media
 import ru.netology.dto.MediaUpload
 import ru.netology.entity.PostEntity
-import ru.netology.entity.toDto
 import ru.netology.entity.toEntity
 import ru.netology.enumeration.AttachmentType
 import ru.netology.error.ApiError
@@ -29,14 +28,22 @@ import javax.inject.Singleton
 
 @Singleton
 class PostRepositoryImpl @Inject constructor(
+    appDb: AppDb,
     private val postDao: PostDao,
+    postRemoteKeyDao: PostRemoteKeyDao,
     private val apiService: ApiService
     ) : PostRepository {
 
+    @OptIn(ExperimentalPagingApi::class)
     override val data: Flow<PagingData<Post>> = Pager(
-        config = PagingConfig(pageSize = 5, enablePlaceholders = false),
-        pagingSourceFactory = {PostPagingSource(apiService)}
-    ).flow
+        config = PagingConfig(pageSize = 25),
+        remoteMediator = PostRemoteMediator(apiService,appDb, postDao,postRemoteKeyDao),
+        pagingSourceFactory = postDao::pagingSource
+    ).flow.map {
+        it.map { postEntity ->
+            postEntity.toDto()
+        }
+    }
 
     override var responseCode: Int = 0
 
@@ -72,6 +79,12 @@ class PostRepositoryImpl @Inject constructor(
     }
         .catch { e -> throw AppError.from(e) }
         .flowOn(Dispatchers.Default)
+
+    override fun getById(id: Long): Flow<Post?> {
+        return postDao.getById(id).map {
+            it?.toDto()
+        }
+    }
 
     override suspend fun save(post: Post) {
         try {

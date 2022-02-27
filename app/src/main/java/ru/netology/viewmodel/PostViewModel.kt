@@ -154,6 +154,10 @@ class PostViewModel @Inject constructor(
         _photo.value = PhotoModel(uri, file)
     }
 
+    fun getById(id: Long): Flow<Post?> {
+        return repository.getById(id)
+    }
+
 
 
 

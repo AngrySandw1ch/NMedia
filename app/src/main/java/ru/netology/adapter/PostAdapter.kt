@@ -36,8 +36,9 @@ class PostAdapter(
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
-        val post = getItem(position)
-        holder.bind(post ?: throw RuntimeException("nullable post in adapter"))
+        getItem(position)?.let {
+            holder.bind(it)
+        }
     }
 
 }
