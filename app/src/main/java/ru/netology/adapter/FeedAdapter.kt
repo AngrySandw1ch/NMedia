@@ -6,14 +6,15 @@ import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ru.netology.util.PostUtils
 import ru.netology.R
+import ru.netology.databinding.CardAdBinding
 import ru.netology.databinding.CardPostBinding
+import ru.netology.dto.Ad
+import ru.netology.dto.FeedItem
 import ru.netology.dto.Post
-import java.lang.RuntimeException
 
 interface OnInteractionListener {
     fun like(post: Post) {}
@@ -23,21 +24,46 @@ interface OnInteractionListener {
     fun playVideo(post: Post) {}
     fun postClicked(post: Post) {}
     fun imageClicked(post: Post) {}
+    fun onAdClick(ad: Ad) {}
 }
 
-class PostAdapter(
+class FeedAdapter(
     private val onInteractionListener: OnInteractionListener
 ) :
-    PagingDataAdapter<Post, PostViewHolder>(PostDiffCallBack()) {
+    PagingDataAdapter<FeedItem, RecyclerView.ViewHolder>(FeedItemDiffCallBack()) {
+    private val typeAd = 0
+    private val typePost = 1
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
-        val binding = CardPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return PostViewHolder(binding, onInteractionListener)
+    override fun getItemViewType(position: Int): Int {
+        return when (getItem(position)) {
+            is Ad -> typeAd
+            is Post -> typePost
+            null -> throw IllegalArgumentException("unknown item type")
+        }
     }
 
-    override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
-        val post = getItem(position)
-        holder.bind(post ?: throw RuntimeException("nullable post in adapter"))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val layoutInflater = LayoutInflater.from(parent.context)
+        return when (viewType) {
+            typeAd -> AdViewHolder(
+                CardAdBinding.inflate(layoutInflater, parent, false),
+                onInteractionListener
+            )
+            typePost -> PostViewHolder(
+                CardPostBinding.inflate(layoutInflater, parent, false),
+                onInteractionListener
+            )
+            else -> throw IllegalArgumentException("unknown view type: $viewType")
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        getItem(position)?.let {
+            when (it) {
+                is Post -> (holder as? PostViewHolder)?.bind(it)
+                is Ad -> (holder as? AdViewHolder)?.bind(it)
+            }
+        }
     }
 
 }
@@ -119,12 +145,35 @@ class PostViewHolder(
     }
 }
 
-class PostDiffCallBack : DiffUtil.ItemCallback<Post>() {
-    override fun areItemsTheSame(oldItem: Post, newItem: Post): Boolean {
+class AdViewHolder(
+    private val binding: CardAdBinding,
+    private val onInteractionListener: OnInteractionListener,
+) : RecyclerView.ViewHolder(binding.root) {
+
+    fun bind(ad: Ad) {
+        with(binding) {
+            Glide.with(image)
+                .load("http://10.0.2.2:9999/media/${ad.image}")
+                .timeout(30_000)
+                .into(image)
+
+            image.setOnClickListener {
+                onInteractionListener.onAdClick(ad)
+            }
+        }
+    }
+}
+
+
+class FeedItemDiffCallBack : DiffUtil.ItemCallback<FeedItem>() {
+    override fun areItemsTheSame(oldItem: FeedItem, newItem: FeedItem): Boolean {
+        if(oldItem::class != newItem::class) {
+            return false
+        }
         return oldItem.id == newItem.id
     }
 
-    override fun areContentsTheSame(oldItem: Post, newItem: Post): Boolean {
+    override fun areContentsTheSame(oldItem: FeedItem, newItem: FeedItem): Boolean {
         return oldItem == newItem
     }
 
